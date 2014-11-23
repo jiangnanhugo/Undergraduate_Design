@@ -47,14 +47,16 @@ z2=[b1 W1]*[ones(m,1)';data];
 a2=sigmoid(z2);
 z3=[b2 W2]*[ones(m,1)';a2];
 a3=sigmoid(z3);
-cost=1/(2*m)*sum(sum((a3-data).^2))+lambda/(2)*(sum(sum(W1.^2))+sum(sum(W2.^2)));
+% different from Andrew Ng' method ,here I delete the weight decay term.
+%cost=1/(2*m)*sum(sum((a3-data).^2))+lambda/(2)*(sum(sum(W1.^2))+sum(sum(W2.^2)));
+cost=sum(sum((a3-data).^2))/(2*m);
 
 
 rho=1/m*sum(a2,2);
 sparsity=sum(rho(:));
 cost=cost+gamma*sparsity;
-sparsityGrad=(rho.^3+2*rho*epsilon).*(rho.^2+epsilon).^(-3/2);
-
+sparsityGrad=sign(rho);%(rho.^3+2*rho*epsilon).*(rho.^2+epsilon).^(-3/2);
+%fprintf('sign equal ? %d\n',sparsityGrad==sign(rho));
 
 
 delta3=-(data-a3).*sigmoidGradient(z3);
@@ -62,8 +64,12 @@ delta3=-(data-a3).*sigmoidGradient(z3);
 %delta2=(W2'*delta3+beta*repmat((-sparsityParam./rho+(1-sparsityParam)./(1-rho)),1,m)).*sigmoidGradient(z2);
 delta2=(W2'*delta3+gamma*repmat(sparsityGrad,1,m)).*sigmoidGradient(z2);
 
-W1grad=1/m*(W1grad+delta2*data')+lambda*W1;
-W2grad=1/m*(W2grad+delta3*a2')+lambda*W2;
+% different from Andrew Ng' method ,here I delete the weight decay term.
+% W1grad=1/m*(W1grad+delta2*data')+lambda*W1;
+% W2grad=1/m*(W2grad+delta3*a2')+lambda*W2;
+W1grad=1/m*(W1grad+delta2*data');
+W2grad=1/m*(W2grad+delta3*a2');
+
 b1grad=1/m*(b1grad+sum(delta2,2));
 b2grad=1/m*(b2grad+sum(delta3,2));
 %  It's originally designed for KL-Divergence

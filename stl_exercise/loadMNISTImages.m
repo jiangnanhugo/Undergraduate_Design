@@ -21,6 +21,8 @@ fclose(fp);
 % Reshape to #pixels x #examples
 images = reshape(images, size(images, 1) * size(images, 2), size(images, 3));
 % Convert to double and rescale to [0,1]
-images = double(images) / 255;
+% here we use normalized method
+%images = double(images) / 255;
+images=featureNormalize(images);
 
 end

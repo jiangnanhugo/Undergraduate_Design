@@ -13,9 +13,13 @@
 %  allow your sparse autoencoder to get good filters; you do not need to 
 %  change the parameters below.
 
+%train set=50000, corss validation set=10000
+trainsize=50000;
+
+
 inputSize  = 28 * 28;
 numLabels  = 5;
-hiddenSize = 200;
+hiddenSize = 196;    % here set it to 196 ,equal to the paper's construction.
 sparsityParam = 0.1; % desired average activation of the hidden units.
                      % (This was denoted by the Greek alphabet rho, which looks like a lower-case "p",
 		             %  in the lecture notes). 
@@ -23,8 +27,8 @@ lambda = 3e-3;       % weight decay parameter
 beta = 3;            % weight of sparsity penalty term   
 maxIter = 400;
 
-gamma = 5e-2;  % L1-regularisation parameter (on features)
-epsilon = 1e-5; % L1-regularisation epsilon |x| ~ sqrt(x^2 + epsilon)
+gamma = 5e-2;       % L1-regularisation parameter (on features)
+epsilon = 1e-5;     % L1-regularisation epsilon |x| ~ sqrt(x^2 + epsilon)
 
 %% ======================================================================
 %  STEP 1: Load data from the MNIST database
@@ -36,29 +40,25 @@ epsilon = 1e-5; % L1-regularisation epsilon |x| ~ sqrt(x^2 + epsilon)
 % Load MNIST database files
 mnistData   = loadMNISTImages('mnist/train-images.idx3-ubyte');
 mnistLabels = loadMNISTLabels('mnist/train-labels.idx1-ubyte');
+mnistDataTest=loadMNISTImages('mnist/t10k-images.idx3-ubyte');
+mnistLabelsTest=loadMNISTLabels('mnist/t10k-labels.idx1-ubyte');
 
+mnistLabels(mnistLabels==0)=10;    %remap 0 to 10
+mnistLabelsTest(mnistLabelsTest==0)=10;
 % Set Unlabeled Set (All Images)
 
-% Simulate a Labeled and Unlabeled set
-labeledSet   = find(mnistLabels >= 0 & mnistLabels <= 4);
-unlabeledSet = find(mnistLabels >= 5);
+[trainData,trainLabels,cvdData,cvdLabels]=sampleImages(mnistData,trainsize,mnistLabels);
 
-numTrain = round(numel(labeledSet)/2);
-trainSet = labeledSet(1:numTrain);
-testSet  = labeledSet(numTrain+1:end);
+unlabeledData=trainData;
 
-unlabeledData = mnistData(:, unlabeledSet);
-
-trainData   = mnistData(:, trainSet);
-trainLabels = mnistLabels(trainSet)' + 1; % Shift Labels to the Range 1-5
-
-testData   = mnistData(:, testSet);
-testLabels = mnistLabels(testSet)' + 1;   % Shift Labels to the Range 1-5
+testData=mnistDataTest;
+testLabels=mnistLabelsTest;
 
 % Output Some Statistics
 fprintf('# examples in unlabeled set: %d\n', size(unlabeledData, 2));
 fprintf('# examples in supervised training set: %d\n\n', size(trainData, 2));
-fprintf('# examples in supervised testing set: %d\n\n', size(testData, 2));
+fprintf('# examples in supervised cross validation set: %d\n\n', size(cvdData, 2));
+fprintf('# examples in supervised testing set: %d\n\n', size(cvdData, 2));
 
 %% ======================================================================
 %  STEP 2: Train the sparse autoencoder
@@ -105,14 +105,18 @@ display_network(W1');
 trainFeatures = feedForwardAutoencoder(opttheta, hiddenSize, inputSize, ...
                                        trainData);
 
+cvdFeatures = feedForwardAutoencoder(opttheta, hiddenSize, inputSize, ...
+                                       cvdData);
+
 testFeatures = feedForwardAutoencoder(opttheta, hiddenSize, inputSize, ...
-                                       testData);
+                                       testData);                                   
+                                   
 
 %%======================================================================
 %% STEP 4: Train the softmax classifier
 
 softmaxModel = struct;  
-%% ----------------- YOUR CODE HERE ----------------------
+
 %  Use softmaxTrain.m from the previous exercise to train a multi-class
 %  classifier. 
 
@@ -128,14 +132,15 @@ softmaxModel=softmaxTrain(inputSize,numClasses,lambda,...
                         trainFeatures,trainLabels, options);
 
 
-%% -----------------------------------------------------
-
+%% ------------------------ CORSS VALIDATION METHOD -----------------------------
+[lambda_vec,error_train,error_val]=validationCurve(trainFeatures,trainLabels,cvdFeatures,cvdLabels,...
+                                    inputSize,numClasses,options);
 
 %%======================================================================
 %% STEP 5: Testing 
 
 %% ----------------- YOUR CODE HERE ----------------------
-% Compute Predictions on the test set (testFeatures) using softmaxPredict
+% Compute Predictions on the test set (cvdFeatures) using softmaxPredict
 % and softmaxModel
 
 
