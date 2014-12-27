@@ -61,7 +61,7 @@ options.Method = 'lbfgs'; % Here, we use L-BFGS to optimize our cost
                           % need a function pointer with two outputs: the
                           % function value and the gradient. In our problem,
                           % sparseAutoencoderCost.m satisfies this.
-options.maxIter = 4;    % Maximum number of iterations of L-BFGS to run 
+options.maxIter = 400;    % Maximum number of iterations of L-BFGS to run 
 options.display = 'on';
 
 [sae1OptTheta,cost]=minFunc(@(p)sparseAutoencoderCost(p,...
@@ -162,7 +162,7 @@ stackedAETheta = [ saeSoftmaxOptTheta ; stackparams ];
 %
 %
 
-[stackedAEOptTheta,cost]=minFunc(@(p)stackedAECost(p,inputSize,hiddenSizeL3,...
+[stackedAEOptTheta,cost]=minFunc(@(p)stackedAECost(p,inputSize,hiddenSizeL2,...
 											numClasses,netconfig,lambda,trainData,trainLabels),...
 											stackedAETheta,options);
 
@@ -179,8 +179,8 @@ stackedAETheta = [ saeSoftmaxOptTheta ; stackparams ];
 
 % Get labelled test images
 % Note that we apply the same kind of preprocessing as the training set
-testData = loadMNISTImages('mnist/t10k-images-idx3-ubyte');
-testLabels = loadMNISTLabels('mnist/t10k-labels-idx1-ubyte');
+testData = loadMNISTImages('mnist/t10k-images.idx3-ubyte');
+testLabels = loadMNISTLabels('mnist/t10k-labels.idx1-ubyte');
 
 testLabels(testLabels == 0) = 10; % Remap 0 to 10
 

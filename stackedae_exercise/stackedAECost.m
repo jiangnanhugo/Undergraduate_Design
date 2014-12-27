@@ -36,8 +36,8 @@ end
 cost = 0; % You need to compute this
 
 % You might find these variables useful
-M = size(data, 2);
-groundTruth = full(sparse(labels, 1:M, 1));
+m = size(data, 2);
+groundTruth = full(sparse(labels, 1:m, 1));
 
 
 %% --------------------------- YOUR CODE HERE -----------------------------
@@ -61,13 +61,38 @@ groundTruth = full(sparse(labels, 1:M, 1));
 %                match exactly that of the size of the matrices in stack.
 %
 
+stack{1}.a = sigmoid(stack{1}.w * data + repmat(stack{1}.b, 1, m));
+stack{2}.a = sigmoid(stack{2}.w * stack{1}.a + repmat(stack{2}.b, 1, m));
 
+% Perfrom a feedforward pass for the output layer
+M = softmaxTheta * stack{2}.a;
 
+M = bsxfun(@minus, M, max(M, [], 1));
 
+expM = exp(M);
 
+% normalized class probabilities
+h = expM ./ repmat(sum(expM, 1), numClasses, 1);
 
+cost = -sum(sum(groundTruth .* log(h))) / m + ...
+       0.5 * lambda * sum(sum(softmaxTheta.^2)) + ...
+       0.5 * lambda * (sum(sum(stack{1}.w.^2)) + sum(sum(stack{2}.w.^2)));
 
+softmaxThetaGrad = -(stack{2}.a * (groundTruth-h)')' ./m + lambda * softmaxTheta;
 
+softmaxDelta = - softmaxTheta' * (groundTruth - h) .* (stack{2}.a .* (1 - stack{2}.a));
+
+L2Delta = (stack{2}.w' * softmaxDelta) .* (stack{1}.a .* (1 - stack{1}.a));
+
+% Note should not include the decay term below if the cost function does not
+% contain the corresponding decay terms. Because if our cost function only 
+% has lambda in the `softmaxTheta` term, when taking derivative w.r.t W, the 
+% lambda never appears in the result.
+stackgrad{2}.w = softmaxDelta * stack{1}.a' ./ m + lambda * stack{2}.w;
+stackgrad{2}.b = mean(softmaxDelta, 2);
+
+stackgrad{1}.w = L2Delta * data' ./ m + lambda * stack{1}.w;
+stackgrad{1}.b = mean(L2Delta, 2);
 
 
 
