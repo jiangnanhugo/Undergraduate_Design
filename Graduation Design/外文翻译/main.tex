@@ -1,0 +1,121 @@
+\documentclass[oneside]{ZJUthesis}
+% 该文档中首字符为“%”的均为注释行，不会在论文中出现
+
+% 论文默认为双面模式，需单面模式请将第一行换为如下所示：
+% \documentclass[oneside]{ZJUthesis}
+
+% 取消目录中链接的颜色，方便打印
+% 如需颜色，请将“false”改为“true”
+\hypersetup{colorlinks=false}
+
+%\usepackage[sectionbib]{chapterbib}
+
+\begin{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 正文字体设定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\fangsong
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 论文封面部分
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 中文封面内容
+
+
+\title{An Analysis of Single-Layer Networks }
+\titletl{in Unsupervised Feature Learning}
+% 如果标题一行写不下，就写成两行，在下面的命令里写第二行，不需要两行则注释掉
+
+
+% 作者
+\author{姜楠}
+
+%\degree{某士}
+
+% 导师
+\supervisor{龙胜春~副教授}
+
+% 专业名称
+\major{计算机科学与技术+自动化1101}
+
+% 研究方向
+%\researchdm{我的方向}
+
+% 所属学院
+\institute{计算机科学与技术学院}
+
+%论文提交日期
+\submitdate{2015年2月}
+
+
+% 生成封面
+\makeCoverPage
+\title{An analysis}
+%\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 论文部分开始
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ZJUfrontmatter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 摘要
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\include{./Chapters/abstractC}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 英文摘要
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\include{./Chapters/abstractE}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 插图列表
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ZJUListofFigures
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 表格列表
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\ZJUListofTables
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 缩写、符号清单、术语表
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\include{./Chapters/symbol}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 目录页
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ZJUcontents
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 正文内容部分开始
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ZJUmainmatter
+
+\include{./Chapters/chap1}
+
+\include{./Chapters/chap2}
+
+\include{./Chapters/chap3}
+
+\include{./Chapters/chap4}
+
+\include{./Chapters/chap5}
+
+\include{./Chapters/chap6}
+
+\ZJUbackmatter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 参考文献
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ZJUthesisbib{thesisbib}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 索引
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ZJUindex
+
+
+\end{document}
