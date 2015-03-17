@@ -18,4 +18,4 @@ del main.toc
 del main.ind
 del main.aux
 del main.ilg
-main.pdf
+main.pdf &
