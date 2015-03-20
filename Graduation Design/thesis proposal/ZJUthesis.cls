@@ -179,13 +179,13 @@ includehead, includefoot]{geometry}
       \begin{tabular}{rl}
         {\bfseries\fangsong\zihao{2}\ZJU@label@title:}
         &
-        \bfseries\fangsong\zihao{-2} \ZJUunderline[320pt]{\ZJU@value@title} \\[3mm]
+        \bfseries\fangsong\zihao{-2} \ZJUunderline[280pt]{\ZJU@value@title} \\[3mm]
         &
         % 这个地方是做第二行标题的判断，如果标题一行写不下，有第二行则显示，否则不显示
         \ifx\ZJU@value@titletl\undefined
           \hfil
         \else
-          {\bfseries\fangsong\zihao{-2}\ZJUunderline[320pt]{\ZJU@value@titletl}}
+          {\bfseries\fangsong\zihao{-2}\ZJUunderline[280pt]{\ZJU@value@titletl}}
         \fi \\
       \end{tabular}
 

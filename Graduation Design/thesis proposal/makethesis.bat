@@ -1,3 +1,4 @@
+taskkill /f /im Acrobat.exe
 del main.pdf
 latex --src-specials --synctex=-1 main 
 makeindex main.idx
@@ -14,7 +15,6 @@ del main.log
 del main.lot
 del main.out
 del main.synctex
-del main.toc
 del main.ind
 del main.aux
 del main.ilg
