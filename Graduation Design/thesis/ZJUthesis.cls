@@ -1,43 +1,22 @@
+%%latex æ¨¡æ¿
 \NeedsTeXFormat{LaTeX2e}[1995/12/01]
-
 \ProvidesClass{ZJUthesis}[2013/01/25 v2.0 ZJUthesis document class]
-% »ùÓÚctexbookÄ£°æ£¬Ôö¼Ó×¨ÓÐÄÚÈÝ
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{ctexbook}}
 \ProcessOptions
-% 2009/09/13µÄv0.94¼°Ö®ºó°æ±¾Ìá¹©ÁËhyperrefµÄÖ§³Ö£¬Ö±½ÓÐ´ÈëÑ¡Ïî¼´¿É
 \LoadClass[cs4size,a4paper,fancyhdr,hyperref]{ctexbook}[2009/09/13]
-%% math packages ÊýÑ§¹«Ê½°ü£¬·ÇÊýÑ§Ïµ¿ÉÎÞÊÓÖ®
 \RequirePackage{amsmath,amsthm,amsfonts,amssymb,bm}
-%% graphicx packages£¬psgragÓÃÓÚÐÞ¸ÄepsÍ¼ÖÐµÄÐÅÏ¢£¬µ«Óëdvipdfm²»¼æÈÝ
 \RequirePackage{graphicx}
-% ÐèÒªtimes°ü£¬ÈÃÓ¢ÎÄ×ÖÌå¿´ÆðÀ´¸üÏñwindowsÏÂ
 \RequirePackage{times}
-%\RequirePackage{fontspec}
-% ÐèÒªarray°ü£¬ÅÅÐÕÃûµ¼Ê¦ÐÅÏ¢Ê±ÓÃ
 \RequirePackage{array}
-% ÐèÒªtocloft°ü£¬µ÷ÕûÄ¿Â¼ÏÔÊ¾¸ñÊ½Ê±Ê¹ÓÃ£¬LaTeX2eÄ¬ÈÏµÄ¸ñÊ½²»·ûºÏÄ£°æÒªÇó
 \RequirePackage[titles]{tocloft}
-% tocloft°üÐèÒªtocbibind°üÀ´ÅäºÏ£¬Í¬Ê±tocloft°üÐèÒªtitles²ÎÊýÀ´½«ÆäÖÃÎªchapter title
-\RequirePackage[chapter]{tocbibind}
+\RequirePackage[nottoc,notlof,notlot]{tocbibind}
 \RequirePackage{makeidx}
-% ²Î¿¼ÎÄÏ×¸ñÊ½µ÷ÕûÐèÒªnatbib°ü
-% sort&compress²ÎÊýÓÃÓÚ°´ÒýÓÃË³ÐòÅÅÁÐ²Î¿¼ÎÄÏ×
-% longnamesfirst²ÎÊýÓÃÓÚ´¦Àí³¤ÈËÃûË³Ðò£¬½«first nameÅÅÇ°Ãæ£¬ÓÃÓÚÍâ¹úÈËÃû
-% square²ÎÊý£¬ÒýÓÃ±êºÅÓÃ·½À¨ºÅÀ¨Æð
-% super²ÎÊý£¬ÒýÓÃ±êºÅÎªÉÏ±ê¸ñÊ½
 \RequirePackage[sort&compress,longnamesfirst,square,super]{natbib}
-% ÉèÖÃÍ¼Æ¬£¬±í¸ñÍ·×ÖÌåÑ¡Ïî¡£¼ä¾à10pt£¬×ÖºÅÎªÐ¡×ÖºÅ£¬¼Ó´Ö×ÖÌå£¬±êÌâÓëÌâÄ¿¼ä¾à1¸ö×Ö·û
 \RequirePackage[margin=10pt,font={small,bf},labelsep=quad]{caption}
-% ´ÖÏßÐÍ±í¸ñÐèÒªµÄÀ©Õ¹°ü
 \RequirePackage{booktabs-de}
-% ¼ÆËã¿í¶ÈÊ¹ÓÃµÄ°ü
 \RequirePackage{calc}
-% ºÏ²¢±í¸ñÐÐÓÃµ½µÄ°ü
 \RequirePackage{multirow}
-% ÑÕÉ«°ü
 \RequirePackage{xcolor}
-% PDFÎÄµµ³¬Á´½Ó¼°ÊéÇ©±ê¼Ç£¬¾ßÌåÑ¡ÏîÒâÒå²Î¿¼hyperrefËµÃ÷ÎÄµµ
-% hyperref°üÒª2011Äê°æµÄ²ÅÐÐ
 \hypersetup{CJKbookmarks=true,%
        bookmarksnumbered,%
                linkcolor=blue,%
@@ -45,25 +24,24 @@
             pdfstartview=FitH,
                hidelinks
          }
-% ÎÄµµ¿ªÊ¼µ¼ÈëÄ¬ÈÏÅäÖÃ
 \AtBeginDocument{\makeatletter\input{ZJUthesis.cfg}\makeatother}
 
-% Ê¹ÓÃgeometry°üÀ´ÐÞ¸ÄÒ³Ãæ³ß´ç
+% ä½¿ç”¨geometryåŒ…æ¥ä¿®æ”¹é¡µé¢å°ºå¯¸
 \RequirePackage[a4paper,%
 top=51pt,bottom=51pt,left=68pt,right=57pt,%
 headsep=14pt,footskip=26pt,%
 includehead, includefoot]{geometry}
 
 
-% ÆæÊýÒ³×ó±ß±ß¾àÊÇ1.5cm
+% å¥‡æ•°é¡µå·¦è¾¹è¾¹è·æ˜¯1.5cm
 %\oddsidemargin -0.14 true cm
-% Å¼ÊýÒ³µÄ×ó±ß¾àÉèÖÃÔò·ÖË«ÃæÄ£Ê½Óëµ¥ÃæÄ£Ê½Á½ÖÖÇé¿ö
+% å¶æ•°é¡µçš„å·¦è¾¹è·è®¾ç½®åˆ™åˆ†åŒé¢æ¨¡å¼ä¸Žå•é¢æ¨¡å¼ä¸¤ç§æƒ…å†µ
 %\if@twoside
 %  \evensidemargin -0.34 true cm
 %\else
 %  \evensidemargin -0.14 true cm
 %\fi
-% ÉèÖÃÒ³Í·¿Õ°×³ß´ç
+% è®¾ç½®é¡µå¤´ç©ºç™½å°ºå¯¸
 %\topmargin -0.74 true cm
 %\headheight 0.8 true cm
 %\headsep 0.5 true cm
@@ -72,7 +50,7 @@ includehead, includefoot]{geometry}
 %\textwidth 16.6 true cm
 %\footskip 0.9 true cm
 \parskip 0.5ex plus 0.25ex minus 0.25ex
-% cleardoublepageÕâ¸öÃüÁîµÄ¶¨Òå
+% cleardoublepageè¿™ä¸ªå‘½ä»¤çš„å®šä¹‰
 \def\cleardoublepage{%
   \clearpage
   \if@twoside
@@ -87,14 +65,17 @@ includehead, includefoot]{geometry}
     \fi
   \fi}
 
-% Õâ¸öµØ·½¶¨ÒåÒ»Ò³ÖÐ¸¡¶¯¶ÔÏó¿ÉÕ¼µÄ×î´ó±ÈÀý
+% è¿™ä¸ªåœ°æ–¹å®šä¹‰ä¸€é¡µä¸­æµ®åŠ¨å¯¹è±¡å¯å çš„æœ€å¤§æ¯”ä¾‹
 \renewcommand{\textfraction}{0.15}
 \renewcommand{\topfraction}{0.85}
 \renewcommand{\bottomfraction}{0.65}
 \renewcommand{\floatpagefraction}{0.60}
 
-% ÉèÖÃÓ¢ÎÄ×ÖÌåÎªTimes New Roman
-%\setmainfont{Times New Roman}
+% è®¾ç½®è‹±æ–‡å­—ä½“ä¸ºTimes New Roman
+\setmainfont{Times New Roman}%è®¾ç½®Times New Romanä¸ºé»˜è®¤çš„è‹±æ–‡å­—ä½“
+\setCJKmainfont{SimSun}      %è®¾ç½®å®‹ä½“ä¸ºé»˜è®¤çš„ä¸­æ–‡å­—ä½“
+
+
 
 \def\reserved@a#1 #2 #3\@nil{%
   \def\ZJUfiledate{#1}%
@@ -103,8 +84,8 @@ includehead, includefoot]{geometry}
 \edef\reserved@b{\csname ver@ZJUthesis.cls\endcsname}
 \expandafter\reserved@a\reserved@b\@nil\relax
 
-% ÐÂÃüÁîNchapterµÄ¶¨Òå
-% ÕâÀïµÄmainmatter¶ÔÓ¦ÓÚtexÎÄµµÖÐµÄ¶¨Òå
+% æ–°å‘½ä»¤Nchapterçš„å®šä¹‰
+% è¿™é‡Œçš„mainmatterå¯¹åº”äºŽtexæ–‡æ¡£ä¸­çš„å®šä¹‰
 \newcommand\Nchapter[1]{%
   \if@mainmatter%
     \@mainmatterfalse%
@@ -114,7 +95,7 @@ includehead, includefoot]{geometry}
     \chapter{#1}%
   \fi}
 
-% ÏÂ»®ÏßµÄÒ»¸ö¶¨Òå
+% ä¸‹åˆ’çº¿çš„ä¸€ä¸ªå®šä¹‰
 \def\ZJU@underline[#1]#2{%
   \underline{\hbox to #1{\hfil#2\hfil}}}
 \def\ZJUunderline{\@ifnextchar[\ZJU@underline\underline}
@@ -138,33 +119,34 @@ includehead, includefoot]{geometry}
 \newcommand\institute[1]{\def\ZJU@value@institute{#1}}
 
 
-% ÖÆ×÷·âÃæµÄÃüÁî
+
+% åˆ¶ä½œå°é¢çš„å‘½ä»¤
 \newcommand\makeCoverPage{%
-  % Õâ¸öµØ·½Ð´µÄÊÇ·âÃæÉÏµÄ·ÖÀàºÅÓëÑ§ºÅ£¬×ÖÌå×ÖºÅ¿ÉÒÔ¸ü¸Ä
+  % è¿™ä¸ªåœ°æ–¹å†™çš„æ˜¯å°é¢ä¸Šçš„åˆ†ç±»å·ä¸Žå­¦å·ï¼Œå­—ä½“å­—å·å¯ä»¥æ›´æ”¹
   \thispagestyle{empty}
   {
     \songti\zihao{-4}
     \linespread{1.3}
     \begin{center}
-
-      % Õâ¸ö³ß´ç¿ÉÒÔ¸ü¸Ä
+      
+      % è¿™ä¸ªå°ºå¯¸å¯ä»¥æ›´æ”¹
       \vspace{20mm}
-      % Õã½­¹¤Òµ´óÑ§ËÄ¸ö×Ö
+      % æµ™æ±Ÿå·¥ä¸šå¤§å­¦å››ä¸ªå­—
       \ifpdf
         \includegraphics[width=100mm]{./CoverPagepic/zjut_logo.pdf} \\
       \else
         \includegraphics[width=100mm]{./CoverPagepic/zjut_logo.eps} \\
       \fi
-      % Õâ¸ö³ß´ç¿ÉÒÔ¸ü¸Ä
+      % è¿™ä¸ªå°ºå¯¸å¯ä»¥æ›´æ”¹
       \vspace{15mm}
       %% \ZJU@value@school \\  \zihao{-1}
-      % Õâ¸ö²©Ê¿Ñ§Î»ÂÛÎÄÔÚdefÎÄ¼þÖÐÒÑÓÐ£¬µ±È»ÔÚtexÎÄ¼þÖÐ»¹¿ÉÒÔ¸ü¸Ä
+      % è¿™ä¸ªåšå£«å­¦ä½è®ºæ–‡åœ¨defæ–‡ä»¶ä¸­å·²æœ‰ï¼Œå½“ç„¶åœ¨texæ–‡ä»¶ä¸­è¿˜å¯ä»¥æ›´æ”¹
       \centerline{\songti \zihao{1}{\ZJU@label@type} }
       \centerline{\songti \zihao{-2}{} }
-      \centerline{\songti \zihao{-2}{\ZJU@label@session}   }
-      % Õâ¸ö³ß´ç¿ÉÒÔ¸ü¸Ä
+      \centerline{\bfseries\songti \zihao{-2}{\ZJU@label@session}   }
+      % è¿™ä¸ªå°ºå¯¸å¯ä»¥æ›´æ”¹
       \vspace{15mm}
-      % Õâ¸öµØ·½µ÷Èë»Õ±ê
+      % è¿™ä¸ªåœ°æ–¹è°ƒå…¥å¾½æ ‡
       \ifpdf
         \includegraphics[width=30mm]{./CoverPagepic/zjut.pdf}    \\
       \else
@@ -175,13 +157,13 @@ includehead, includefoot]{geometry}
       \vspace{2mm}
 
     \begin{center}
-      % ÂÛÎÄÌâÄ¿²¿·ÖÄÚÈÝ£¬¿ÉÒÔÐÞ¸Ä
+      % è®ºæ–‡é¢˜ç›®éƒ¨åˆ†å†…å®¹ï¼Œå¯ä»¥ä¿®æ”¹
       \begin{tabular}{rl}
-	      {\bfseries\songti\zihao{2}\ZJU@label@title{~~~~}}
+        {\bfseries\songti\zihao{2}\ZJU@label@title\quad}
         &
         \bfseries\songti\zihao{-2} \ZJUunderline[280pt]{\ZJU@value@title} \\[3mm]
         &
-        % Õâ¸öµØ·½ÊÇ×öµÚ¶þÐÐ±êÌâµÄÅÐ¶Ï£¬Èç¹û±êÌâÒ»ÐÐÐ´²»ÏÂ£¬ÓÐµÚ¶þÐÐÔòÏÔÊ¾£¬·ñÔò²»ÏÔÊ¾
+        % è¿™ä¸ªåœ°æ–¹æ˜¯åšç¬¬äºŒè¡Œæ ‡é¢˜çš„åˆ¤æ–­ï¼Œå¦‚æžœæ ‡é¢˜ä¸€è¡Œå†™ä¸ä¸‹ï¼Œæœ‰ç¬¬äºŒè¡Œåˆ™æ˜¾ç¤ºï¼Œå¦åˆ™ä¸æ˜¾ç¤º
         \ifx\ZJU@value@titletl\undefined
           \hfil
         \else
@@ -189,14 +171,14 @@ includehead, includefoot]{geometry}
         \fi \\
       \end{tabular}
 
-      % Õâ¸ö¾àÀë¿ÉÒÔÐÞ¸Ä
+      % è¿™ä¸ªè·ç¦»å¯ä»¥ä¿®æ”¹
       \vspace{15mm}
 
-      % ×óÓÒÁ½±ß×ÖÌå²»Í¬£¬¶¨ÒåÁ½¸öºêABÀ´¼ò»¯´úÂë£¬Õâ¸ö¹¦ÄÜÓÃµ½ÁËarrayºê°ü
+      % å·¦å³ä¸¤è¾¹å­—ä½“ä¸åŒï¼Œå®šä¹‰ä¸¤ä¸ªå®ABæ¥ç®€åŒ–ä»£ç ï¼Œè¿™ä¸ªåŠŸèƒ½ç”¨åˆ°äº†arrayå®åŒ…
       \newcolumntype{A}{>{\songti}r<{}}
       \newcolumntype{B}{>{\songti}l<{}}
       \zihao{4}
-      \begin{tabular}{A@{~~~~}B}
+      \begin{tabular}{A@{\quad}B}
         \ZJU@label@author & \ZJUunderline[200pt]{\ZJU@value@author} \\[3mm]
         \ZJU@label@supervisor & \ZJUunderline[200pt]{\ZJU@value@supervisor} \\
       \end{tabular}
@@ -204,7 +186,7 @@ includehead, includefoot]{geometry}
       \vspace{10mm}
 
       \zihao{4}
-      \begin{tabular}{A@{~~~~}B}
+      \begin{tabular}{A@{\quad}B}
         \ZJU@label@major & \ZJUunderline[200pt]{\ZJU@value@major} \\[3mm]
 	\ZJU@label@institute & \ZJUunderline[200pt]{\ZJU@value@institute} \\ [3mm]
 	\ZJU@label@submitdate & \ZJUunderline[200pt]{\ZJU@value@submitdate} \\
@@ -213,11 +195,11 @@ includehead, includefoot]{geometry}
   }
 }
 
-%²åÈëÖÐÎÄÌâÃûÒ³
+%æ’å…¥ä¸­æ–‡é¢˜åé¡µ
 \renewcommand\maketitle{%
-  % ÐÂ¿ªÒ»¸öÒ³Ãæ
+  % æ–°å¼€ä¸€ä¸ªé¡µé¢
   \cleardoublepage
-  % ÎÞÒ³Ã¼Ò³½Å
+  % æ— é¡µçœ‰é¡µè„š
   \thispagestyle{empty}
   {
     \linespread{1.3}
@@ -228,10 +210,10 @@ includehead, includefoot]{geometry}
 }
 
 
-% ¿ÕÒ³Ã¼Ò³µÄ¸ñÊ½¶¨Òå
-% Ã¿Ò»¸öchapter¿ªÊ¼µÄµÚÒ»Ò³µÄÒ³Ã¼Ò³½ÅÑùÊ½ÎªplainÑùÊ½
+% ç©ºé¡µçœ‰é¡µçš„æ ¼å¼å®šä¹‰
+% æ¯ä¸€ä¸ªchapterå¼€å§‹çš„ç¬¬ä¸€é¡µçš„é¡µçœ‰é¡µè„šæ ·å¼ä¸ºplainæ ·å¼
 \fancypagestyle{plain}{%
-  \fancyhf{}% ÏÈÇå³ýµ±Ç°Ò³ÃæµÄÒ³Ã¼Ò³½Å¶¨Òå£¬ÊÇfancyhdr°üÖÐµÄ¶¨Òå
+  \fancyhf{}% å…ˆæ¸…é™¤å½“å‰é¡µé¢çš„é¡µçœ‰é¡µè„šå®šä¹‰ï¼Œæ˜¯fancyhdråŒ…ä¸­çš„å®šä¹‰
   \renewcommand{\headrulewidth}{0.5pt}%
   \renewcommand{\footrulewidth}{0.5pt}%
   \if@twoside
@@ -244,11 +226,11 @@ includehead, includefoot]{geometry}
   \fi
 }
 
-% L¿¿×ó R¿¿ÓÒ OÆæÊýÒ³ EÅ¼ÊýÒ³
-% Ò»°ãÒ³µÄÒ³Ã¼Ò³½ÅÑùÊ½
+% Lé å·¦ Ré å³ Oå¥‡æ•°é¡µ Eå¶æ•°é¡µ
+% ä¸€èˆ¬é¡µçš„é¡µçœ‰é¡µè„šæ ·å¼
 \pagestyle{fancy}
-  \fancyhf{} %fancyhfÊµ¼ÊÊÇfancyheadÓëfancyfootµÄºÏÌå£¬ËüµÄ²ÎÊýÓÃHºÍFÖ¸¶¨
-  % ·Öµ¥Ë«ÃæÅÐ¶ÏÒ³Ã¼µÄÉèÖÃ
+  \fancyhf{} %fancyhfå®žé™…æ˜¯fancyheadä¸Žfancyfootçš„åˆä½“ï¼Œå®ƒçš„å‚æ•°ç”¨Hå’ŒFæŒ‡å®š
+  % åˆ†å•åŒé¢åˆ¤æ–­é¡µçœ‰çš„è®¾ç½®
   \if@twoside
     \fancyhead[CO]{\songti\zihao{-5}\centerline{\ZJU@value@school\ZJU@label@type}}
     \fancyfoot[RO]{\zihao{-5} ~\thepage~}
@@ -263,10 +245,10 @@ includehead, includefoot]{geometry}
 
 
 
-% ÉèÖÃÕÂ½Ú±êÌâ¸ñÊ½
+% è®¾ç½®ç« èŠ‚æ ‡é¢˜æ ¼å¼
 \CTEXsetup[beforeskip={18pt}]{chapter}
 \CTEXsetup[afterskip={18pt}]{chapter}
-\CTEXsetup[name={µÚ,ÕÂ}]{chapter}
+\CTEXsetup[name={ç¬¬,ç« }]{chapter}
 \CTEXsetup[number={\chinese{chapter}{}}]{chapter}
 \CTEXsetup[format={\noindent\centering\bfseries}]{chapter}
 \CTEXsetup[nameformat={\zihao{-2}}]{chapter}
@@ -281,84 +263,118 @@ includehead, includefoot]{geometry}
 \CTEXsetup[format={\noindent\bfseries}]{subsection}
 \CTEXsetup[nameformat={\zihao{4}}]{subsection}
 \CTEXsetup[titleformat={\songti\zihao{4}}]{subsection}
-% ´Ë´¦ÕÂ½Ú±êÌâÇ°ºó¿Õ°×¾àÀë²ÉÓÃÁËÄ¬ÈÏÉèÖÃ£¬ÈçÐèÐÞ¸ÄÇë²Î¿¼ctex²Î¿¼ÎÄµµctex.pdf
+% æ­¤å¤„ç« èŠ‚æ ‡é¢˜å‰åŽç©ºç™½è·ç¦»é‡‡ç”¨äº†é»˜è®¤è®¾ç½®ï¼Œå¦‚éœ€ä¿®æ”¹è¯·å‚è€ƒctexå‚è€ƒæ–‡æ¡£ctex.pdf
 
-% ÕýÎÄ²¿·ÖÎÄ×ÖµÄÐÐ¾àÉèÖÃ
+% æ­£æ–‡éƒ¨åˆ†æ–‡å­—çš„è¡Œè·è®¾ç½®
 \linespread{1.5}
 
-% ÕªÒª
+% æ‘˜è¦
 \newenvironment{abstract}
   {\setlength{\parskip}{24pt}
   \linespread{1.0}\Nchapter{\bfseries\heiti\ZJU@label@abstract}
   \setlength{\parskip}{18pt}}
   {}
 
-%¹Ø¼ü×Ö
+%å…³é”®å­—
 \newcommand\keywords[1]{%
   \vspace{2ex}\noindent{\heiti \ZJU@label@keywords} #1}
 
-%Ó¢ÎÄÕªÒª
+%è‹±æ–‡æ‘˜è¦
 \newenvironment{Eabstract}
   {\setlength{\parskip}{24pt}\linespread{1.0}\Nchapter{\bfseries\ZJU@label@Eabstract}\setlength{\parskip}{18pt}}
   {}
 
-%Ó¢ÎÄ¹Ø¼ü×Ö
+%è‹±æ–‡å…³é”®å­—
 \newcommand\Ekeywords[1]{%
   \vspace{2ex}\noindent{\bf \ZJU@label@Ekeywords} #1}
 
+\newcommand\ZJUfrontmatter{%
+  \frontmatter
+  % æ­£æ–‡å†…å®¹å‰çš„éƒ¨åˆ†é¡µç æ ¼å¼ä¸ºå¤§å†™ç½—é©¬æ•°å­—
+
+  \pagenumbering{Roman}
+}
 
 
-
-% ÖÂÐ»
+% è‡´è°¢
 \renewenvironment{thanks}
   {\setlength{\parskip}{18pt}
    \linespread{1.5}\centering\Nchapter{\songti\bfseries\ZJU@label@thanks}
    \setlength{\parskip}{18pt}}
   {}
 
-% Éú³ÉÄ¿Â¼£¨ÂÛÎÄÖÐ³ÆÄ¿´Î£©
+\renewcommand{\theequation}{\thechapter-\arabic{equation}}
+\renewcommand{\thefigure}{\thechapter-\arabic{figure}}
+\renewcommand{\thetable}{\thechapter-\arabic{table}}
+
+
+\renewcommand\cftfigpresnum{å›¾}
+\renewcommand\cfttabpresnum{è¡¨}
+%\settowidth{\cftfignumwidth}{\cftfigpresnum}
+%\settowidth{\cfttabnumwidth}{\cfttabpresnum}
+%\renewcommand{\cftfigaftersnumb}{~~~~}
+%\renewcommand{\cfttabaftersnumb}{~~~~}
+
+
+
+% ç”Ÿæˆç›®å½•ï¼ˆè®ºæ–‡ä¸­ç§°ç›®æ¬¡ï¼‰
 \newcommand\ZJUcontents{%
-  % ÐÞ¸ÄÄ¿Â¼µÄ¸ñÊ½
-  \renewcommand{\cftchapfont}{\fangsong\zihao{-4}}
+  \renewcommand{\contentsname}{ç›®å½•}
+  %chapter
   \renewcommand{\cftchapleader}{\cftdotfill{\cftdot}}
-  \renewcommand{\cftchapdotsep}{\cftdotsep}
-  \renewcommand{\cftchappagefont}{\rm\zihao{-4}}
+  \renewcommand{\cftchapdotsep}{\bfseries\cftdotsep}
+  \renewcommand{\cftchapfont}{\bfseries\songti\zihao{5}}
+  \renewcommand{\cftchappagefont}{\bfseries\zihao{5}}
+
+  %section
   \renewcommand{\cftsecleader}{\cftdotfill{\cftdot}}
   \renewcommand{\cftsecdotsep}{\cftdotsep}
-  \renewcommand{\cftsecfont}{\fangsong\zihao{-4}}
-  \renewcommand{\cftsecdotsep}{\cftdotsep}
-  \renewcommand{\cftsecpagefont}{\rm\zihao{-4}}
-  \setlength{\cftbeforechapskip}{-2pt}
-  \setlength{\cftbeforesecskip}{-2pt}
-  \setlength{\cftsecindent}{0pt}
-  \setcounter{tocdepth}{1}
+  \renewcommand{\cftsecfont}{\songti\zihao{5}}
+  \renewcommand{\cftsecpagefont}{\zihao{5}}
+     
+  %subsection
+  \renewcommand{\cftsubsecleader}{\cftdotfill{\cftdot}} 
+  \renewcommand{\cftsubsecdotsep}{\cftdotsep}
+  \renewcommand{\cftsubsecfont}{\songti\zihao{5}}
+  \renewcommand{\cftsubsecpagefont}{\zihao{5}}
+  
+  \setlength{\cftbeforechapskip}{-6pt}
+  \setlength{\cftbeforesecskip}{-12pt}
+  \setlength{\cftbeforesubsecskip}{-12pt}
+  \setlength{\cftsecindent}{1em}
+  \setlength{\cftsubsecindent}{2em}
+   
+  \setcounter{tocdepth}{3}
+  
   \addtocontents{toc}{\cftpagenumbersoff{chapter}}
   \tableofcontents
   \addtocontents{toc}{\cftpagenumberson{chapter}}
 }
 
-% ²åÍ¼Ä¿Â¼
+% æ’å›¾ç›®å½•
 \newcommand\ZJUListofFigures{%
-  \renewcommand{\cftfigfont}{\fangsong\zihao{-4}}
+  \renewcommand\listfigurename{å›¾ç›®å½•}
+  \renewcommand{\cftfigfont}{\songti\zihao{5}}
   \renewcommand{\cftfigleader}{\cftdotfill{\cftdot}}
   \renewcommand{\cftfigdotsep}{\cftdotsep}
-  \renewcommand{\cftfigpagefont}{\rm\zihao{-4}}
-  \setlength{\cftbeforefigskip}{-2pt}
+  \renewcommand{\cftfigpagefont}{\rm\zihao{5}}
+  \setlength{\cftbeforefigskip}{-10pt}
   \listoffigures
 }
 
-% ¸½±íÄ¿Â¼
+% é™„è¡¨ç›®å½•
 \newcommand\ZJUListofTables{%
-  \renewcommand{\cfttabfont}{\fangsong\zihao{-4}}
+  \renewcommand\listtablename{è¡¨ç›®å½•}
+  \renewcommand{\cfttabfont}{\songti\zihao{5}}
   \renewcommand{\cfttableader}{\cftdotfill{\cftdot}}
   \renewcommand{\cfttabdotsep}{\cftdotsep}
-  \renewcommand{\cfttabpagefont}{\rm\zihao{-4}}
-  \setlength{\cftbeforetabskip}{-2pt}
+  \renewcommand{\cfttabpagefont}{\rm\zihao{5}}
+  \setlength{\cftbeforetabskip}{-10pt}
   \listoftables
 }
 
 
-% ²Î¿¼ÎÄÏ×²¿·Ö
+% å‚è€ƒæ–‡çŒ®éƒ¨åˆ†
 \DeclareRobustCommand\citenum
    {\begingroup
      \NAT@swatrue\let\NAT@ctype\z@\NAT@parfalse\let\textsuperscript\relax
@@ -376,10 +392,10 @@ includehead, includefoot]{geometry}
 
 \makeindex
 
-% Ë÷Òý
+% ç´¢å¼•
 \newcommand\ZJUindex{%
   \cleardoublepage
-  % ²»ÓÃÕâÒ»¾ä»áÔì³ÉË÷ÒýµÄÊéÇ©Î»ÖÃ´íÎó
+  % ä¸ç”¨è¿™ä¸€å¥ä¼šé€ æˆç´¢å¼•çš„ä¹¦ç­¾ä½ç½®é”™è¯¯
   \phantomsection
   \printindex
 }
@@ -391,17 +407,40 @@ includehead, includefoot]{geometry}
   \setbox0=\hbox{X\lower.5ex\hbox{\kern-.15em\reflect{E}}\kern-.1667em \TeX}%
   \dp0=0pt\ht0=0pt\box0 }
 
-% ÉèÖÃÏÔÊ¾µ½4¼¶±êÌâ chapter section subsection subsubsection£¬¿ÉÊÊµ±¼õÐ¡
+% è®¾ç½®æ˜¾ç¤ºåˆ°4çº§æ ‡é¢˜ chapter section subsection subsubsectionï¼Œå¯é€‚å½“å‡å°
 \setcounter{secnumdepth}{4}
-\newtheoremstyle{break}% name
-  {}%      Space above, empty = `usual value'
-  {}%      Space below
-  {\itshape}% Body font
-  {}%         Indent amount (empty = no indent, \parindent = para indent)
-  {\bfseries}% Thm head font
-  {.}%        Punctuation after thm head
-  {\newline}% Space after thm head: \newline = linebreak
-  {}%         Thm head spec
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem*{cor}{Corollary}
+
+\theoremstyle{definition}
+\newtheorem{defn}{å®šä¹‰}[section]
+\newtheorem{conj}{Conjecture}[section]
+\newtheorem{exmp}{Example}[section]
+
+\theoremstyle{remark}
+\newtheorem*{rem}{Remark}
+\newtheorem*{note}{Note}
+
+
+\makeatletter
+\renewcommand{\numberline}[1]{%
+\settowidth\@tempdimb{#1\hspace{0.5em}}%
+\ifdim\@tempdima<\@tempdimb%
+  \@tempdima=\@tempdimb%
+\fi%
+\hb@xt@\@tempdima{\@cftbsnum #1\@cftasnum\hfil}\@cftasnumb}
+\makeatother
+
+
+
+
+
+
+
 \endinput
 %%
 %% End of file `ZJUthesis.cls'.
