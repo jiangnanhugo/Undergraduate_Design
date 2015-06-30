@@ -145,6 +145,7 @@ includehead, includefoot]{geometry}
   {
     \songti\zihao{-4}
     \linespread{1.3}
+	\vspace{20mm}
     \begin{center}
       
       % 这个尺寸可以更改
@@ -177,15 +178,15 @@ includehead, includefoot]{geometry}
     \begin{center}
       % 论文题目部分内容，可以修改
       \begin{tabular}{rl}
-        {\bfseries\fangsong\zihao{2}\ZJU@label@title:}
+        {\songti\zihao{2}\ZJU@label@title~~~~}
         &
-        \bfseries\fangsong\zihao{-2} \ZJUunderline[320pt]{\ZJU@value@title} \\[3mm]
+        \songti\zihao{-2} \ZJUunderline[320pt]{\ZJU@value@title} \\[3mm]
         &
         % 这个地方是做第二行标题的判断，如果标题一行写不下，有第二行则显示，否则不显示
         \ifx\ZJU@value@titletl\undefined
           \hfil
         \else
-          {\bfseries\fangsong\zihao{-2}\ZJUunderline[320pt]{\ZJU@value@titletl}}
+          {\songti\zihao{-2}\ZJUunderline[320pt]{\ZJU@value@titletl}}
         \fi \\
       \end{tabular}
 
@@ -194,9 +195,9 @@ includehead, includefoot]{geometry}
 
       % 左右两边字体不同，定义两个宏AB来简化代码，这个功能用到了array宏包
       \newcolumntype{A}{>{\songti}r<{}}
-      \newcolumntype{B}{>{\fangsong}l<{}}
+      \newcolumntype{B}{>{\songti}l<{}}
       \zihao{4}
-      \begin{tabular}{A@{：}B}
+      \begin{tabular}{A@{~~~~}B}
         \ZJU@label@author & \ZJUunderline[200pt]{\ZJU@value@author} \\[3mm]
         \ZJU@label@supervisor & \ZJUunderline[200pt]{\ZJU@value@supervisor} \\
       \end{tabular}
@@ -204,7 +205,7 @@ includehead, includefoot]{geometry}
       \vspace{10mm}
 
       \zihao{4}
-      \begin{tabular}{A@{：}B}
+      \begin{tabular}{A@{~~~~}B}
         \ZJU@label@major & \ZJUunderline[200pt]{\ZJU@value@major} \\[3mm]
 	\ZJU@label@institute & \ZJUunderline[200pt]{\ZJU@value@institute} \\ [3mm]
 	\ZJU@label@submitdate & \ZJUunderline[200pt]{\ZJU@value@submitdate} \\
@@ -276,13 +277,13 @@ includehead, includefoot]{geometry}
 \CTEXsetup[name={,}]{chapter}
 \CTEXsetup[number={\chinese{chapter}{、}}]{chapter}
 \CTEXsetup[format={\noindent}]{chapter}
-\CTEXsetup[nameformat={\bfseries\zihao{-3}}]{chapter}
-\CTEXsetup[titleformat={\bfseries\heiti\zihao{-3}}]{chapter}
+\CTEXsetup[nameformat={\zihao{-3}}]{chapter}
+\CTEXsetup[titleformat={\heiti\zihao{-3}}]{chapter}
 %\CTEXsetup[beforeskip={1pt}]{section}
 %\CTEXsetup[afterskip={1pt}]{section}
 \CTEXsetup[format={\noindent}]{section}
-\CTEXsetup[nameformat={\bfseries\zihao{4}}]{section}
-\CTEXsetup[titleformat={\bfseries\heiti\zihao{4}}]{section}
+\CTEXsetup[nameformat={\zihao{4}}]{section}
+\CTEXsetup[titleformat={\heiti\zihao{4}}]{section}
 \CTEXsetup[format={\noindent}]{subsection}
 \CTEXsetup[nameformat={\zihao{-4}}]{subsection}
 \CTEXsetup[titleformat={\heiti\zihao{-4}}]{subsection}
@@ -296,7 +297,7 @@ includehead, includefoot]{geometry}
 
 % 摘要
 \newenvironment{abstract}
-  {\Nchapter{\ZJU@label@abstract}}
+  {\Nchapter{ }}
   {}
 
 %关键字

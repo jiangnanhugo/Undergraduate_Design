@@ -131,22 +131,16 @@ includehead, includefoot]{geometry}
       
       % 这个尺寸可以更改
       \vspace{20mm}
-      % 浙江工业大学四个字
       \ifpdf
-        \includegraphics[width=100mm]{./CoverPagepic/zjut_logo.pdf} \\
+	  \vspace{20mm}\includegraphics[width=100mm]{./CoverPagepic/zjut_logo.pdf} \\
       \else
-        \includegraphics[width=100mm]{./CoverPagepic/zjut_logo.eps} \\
+        \vspace{20mm}\includegraphics[width=100mm]{./CoverPagepic/zjut_logo.eps} \\
       \fi
-      % 这个尺寸可以更改
       \vspace{15mm}
-      %% \ZJU@value@school \\  \zihao{-1}
-      % 这个博士学位论文在def文件中已有，当然在tex文件中还可以更改
       \centerline{\songti \zihao{1}{\ZJU@label@type} }
       \centerline{\songti \zihao{-2}{} }
       \centerline{\bfseries\songti \zihao{-2}{\ZJU@label@session}   }
-      % 这个尺寸可以更改
       \vspace{15mm}
-      % 这个地方调入徽标
       \ifpdf
         \includegraphics[width=30mm]{./CoverPagepic/zjut.pdf}    \\
       \else
@@ -157,13 +151,11 @@ includehead, includefoot]{geometry}
       \vspace{2mm}
 
     \begin{center}
-      % 论文题目部分内容，可以修改
       \begin{tabular}{rl}
         {\bfseries\songti\zihao{2}\ZJU@label@title\quad}
         &
-        \bfseries\songti\zihao{-2} \ZJUunderline[280pt]{\ZJU@value@title} \\[3mm]
+        \bfseries\songti\zihao{-2} \ZJUunderline[340pt]{\ZJU@value@title} \\[3mm]
         &
-        % 这个地方是做第二行标题的判断，如果标题一行写不下，有第二行则显示，否则不显示
         \ifx\ZJU@value@titletl\undefined
           \hfil
         \else
@@ -171,10 +163,8 @@ includehead, includefoot]{geometry}
         \fi \\
       \end{tabular}
 
-      % 这个距离可以修改
       \vspace{15mm}
 
-      % 左右两边字体不同，定义两个宏AB来简化代码，这个功能用到了array宏包
       \newcolumntype{A}{>{\songti}r<{}}
       \newcolumntype{B}{>{\songti}l<{}}
       \zihao{4}
@@ -195,11 +185,8 @@ includehead, includefoot]{geometry}
   }
 }
 
-%插入中文题名页
 \renewcommand\maketitle{%
-  % 新开一个页面
   \cleardoublepage
-  % 无页眉页脚
   \thispagestyle{empty}
   {
     \linespread{1.3}
@@ -310,10 +297,6 @@ includehead, includefoot]{geometry}
 
 \renewcommand\cftfigpresnum{图}
 \renewcommand\cfttabpresnum{表}
-%\settowidth{\cftfignumwidth}{\cftfigpresnum}
-%\settowidth{\cfttabnumwidth}{\cfttabpresnum}
-%\renewcommand{\cftfigaftersnumb}{~~~~}
-%\renewcommand{\cfttabaftersnumb}{~~~~}
 
 
 
@@ -338,8 +321,8 @@ includehead, includefoot]{geometry}
   \renewcommand{\cftsubsecfont}{\songti\zihao{5}}
   \renewcommand{\cftsubsecpagefont}{\zihao{5}}
   
-  \setlength{\cftbeforechapskip}{-6pt}
-  \setlength{\cftbeforesecskip}{-12pt}
+  \setlength{\cftbeforechapskip}{-5pt}
+  \setlength{\cftbeforesecskip}{-10pt}
   \setlength{\cftbeforesubsecskip}{-12pt}
   \setlength{\cftsecindent}{1em}
   \setlength{\cftsubsecindent}{2em}
@@ -395,7 +378,6 @@ includehead, includefoot]{geometry}
 % 索引
 \newcommand\ZJUindex{%
   \cleardoublepage
-  % 不用这一句会造成索引的书签位置错误
   \phantomsection
   \printindex
 }

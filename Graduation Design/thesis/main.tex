@@ -10,8 +10,7 @@
 \hypersetup{colorlinks=false}
 \begin{document}
 \songti
-\title{稀疏惩罚因子对无监督学习算法}
-\titletl{的自动编码器的研究分析}
+\title{对自动编码器的稀疏惩罚因子研究与分析}
 \author{姜楠}
 \supervisor{龙胜春~副教授}
 \major{计算机科学与技术+自动化1101}
@@ -42,42 +41,43 @@ Machine learning algorithms depend heavily on the data representation, which dom
 \chapter{绪论}
 \section{选题背景与意义}
 \subsection{监督学习}
-机器学习（Machine Learning）常用方法主要分为有监督学习（Supervised Learning）和无监督学习方法（Unsupervised Learning）。监督学习，即通常意义上的分类算法，是指从已标记的训练数据中来调整分类器的参数，使分类器达到较低的错误率的过程。在监督学习中，每个样本都是由一个输入对象（通常是向量）和一个期望的输出值组成。训练过程中，通过分析样本数据，来调整模型参数，并产生一个具有推测功能的分类器，其可以用来对新的测试样例进行预测。监督学习是目前研究较为广泛的一种机器学习方法，在许多领域有很成功的应用，如语音处理和识别、人脸识别和跟踪、无人驾驶等\cite{DBLP:journals/taslp/DahlYDA12,DBLP:conf/icml/Boulanger-LewandowskiBV12,DBLP:journals/neco/HintonOT06,DBLP:conf/nips/BengioLPL06,DBLP:conf/interspeech/YaoZHSY13,DBLP:conf/interspeech/MikolovKBCK10,DBLP:conf/emnlp/SocherPHNM11} 。尽管如此，监督学习还是有很大的限制。因为现实中存在数据集大多没有标签存在，只有少部分实验数据集已被打标签。采用人工打标签方法费时费力，监督学习算法所能实践的数据集受到限制，同时若是数据集的特征维度过高，数据集样本数量过少，监督学习算法很容易出现过拟合现象。训练算法迭代时间将会呈指数增长，相应的模型参数过多，在训练集中表现十分好，在测试集上的表现非常差。目前广泛使用的监督算法模型有人工神经网络（Aritificial Neural Network）、支持向量机（Support Vector Machine）、最邻近算法（k-Nearest Neighbor）等。
+机器学习（Machine Learning）常用方法主要分为有监督学习（Supervised Learning）和无监督学习方法（Unsupervised Learning）。监督学习，主要分为分类算法（Classification）和回归算法（Regression）。分类算法是指从已标记的训练数据中来调整分类器的参数，通过迭代更新参数，使得分类器在训练集达到较低的错误率的过程。在监督学习中，每个样本都是由输入样本（多维数据）和期望的输出值组成。训练过程中，通过分析样本数据，来调整模型参数，并产生一个具有推测功能的分类器，其可以用来对新的测试样例进行预测。监督学习是目前机器学习领域中应用广泛的一种成熟算法，在许多领域有很成功的应用，如语音处理和识别、人脸识别和跟踪、无人驾驶等\cite{DBLP:journals/taslp/DahlYDA12,DBLP:conf/icml/Boulanger-LewandowskiBV12,DBLP:journals/neco/HintonOT06,DBLP:conf/nips/BengioLPL06,DBLP:conf/interspeech/YaoZHSY13,DBLP:conf/interspeech/MikolovKBCK10,DBLP:conf/emnlp/SocherPHNM11} 。尽管如此，监督学习还是有很大的限制。因为现实中存在数据集大多没有标签存在，只有少部分实验数据集已被打标签。采用人工打标签方法费时费力，监督学习算法所能实践的数据集受到限制，同时若是数据集的特征维度过高，数据集样本数量过少，监督学习算法很容易出现过拟合现象。训练算法迭代时间将会呈指数增长，相应的模型参数过多，在训练集中表现十分好，在测试集上的表现非常差。目前监督算法模型主要分类为：人工神经网络（Aritificial Neural Network）、支持向量机（Support Vector Machine）、最邻近算法（k-Nearest Neighbor）等。
 
 
 \subsection{人工神经网络}
-人工神经网络（Artificial Neural Network）受到生物神经学的启发是生物神经网络的一种模拟和近似，它从结构、实现机理和功能上模拟人脑神经网络处理信息的过程。BP（Back Propagation）神经网络模型是一种经典的人工神经网络算法，由输入层（Input Layer）、隐藏层(Hidden Layer)、输出层(Output Layer)构成，如图\ref{fig:nn}所示。
-\begin{figure}[h]
+人工神经网络（Artificial Neural Network）起源于上世纪生物神经学科对人脑的学习机制的重大突破发现。通过对神经的模拟和近似，人工神经网络能从结构、功能上模拟生物处理信息的过程。BP（Back Propagation）神经网络模型是一种经典的人工神经网络算法，由输入层（Input Layer）、隐藏层(Hidden Layer)、输出层(Output Layer)构成，如图\ref{fig:nn} 所示。
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/nn.eps}
 \caption{典型神经网络结构\label{fig:nn}}
 \end{figure}
-BP算法由数据流的前向传播和误差信号的反向传播两个过程构成。正向传播时，传递方向为：输入层$\to$ 隐含层 $\to$ 输出层，每层神经元的状态只影响下一层神经元。若在输出层得不到期望的输出，则转向误差信号的反向传播流程。通过这两个过程的交替进行，在权重向量空间执行误差函数梯度下降策略，动态迭代搜索一组向量，使网络误差函数达到最小值，从而完成信息提取和记忆过程。BP算法能突破传统多项式公式有限的拟合数据的能力，能学习到更加复杂的非线性函数规律和即使数据中包含一些误差，它也能收敛致最优解，拥有较强的自适应性。
+BP算法由训练过程分为数据流的前向传播和误差信号的反向传播两个过程构成。正向传播时，传递方向为：输入层$\to$ 隐含层 $\to$ 输出层，当前层的神经元能动态影响、更新下一层的神经元节点。若在输出层得不到期望的输出，则转向误差信号的反向传播流程。通过这两个过程的交替进行，动态更新权重向量，使得模型的误差函数随着其梯度方向下降至系统最优解，从而实现了模型的训练过程，即从训练集中提取并记忆了有效信息。BP算法能突破传统多项式公式有限的拟合数据的能力，能学习到更加复杂的非线性函数规律和即使数据中包含一些误差，它也能收敛致最优解，拥有较强的自适应性。
 
 然而，由于BP神经网络的代价函数不是严格意义上的凸函数，一旦算法在迭代优化过程中陷入局部极值，就有可能无法求得系统的最优解。若要拟合高维复杂的函数，采用较复杂的神经网络模型就会导致函数运算量巨大、收敛过慢，若采用较小的神经网络模型，则只能学习到简单的函数方程，可能会忽略了重要的信息特征\cite{1}。
 
 
 \subsection{非监督学习}
-在实际应用中，我们无法预先知道样本的标签，只能从原始的无标签的样本集开始，需要直接对数据进行建模，进行分类器的设计，即通常所说的无监督学习方法（Unsupervised Learning）。有别于监督式学习算法，无监督式学习算法在训练过程中，并不知道其分类结果是否正确，亦即没有受到监督式增强（告诉它何种学习是正确的）。其特点是仅需要提供输入样例，它会自动从样例中找出其潜在类别规则。当学习完成后，可以将其用在全新的样例上。
+在实际应用中，大多数情况下，获取样本的标签费时费力，只能从原始的无标签数据集入手，需要直接建模原始数据，设计分类器，这个过程称为无监督学习方法（Unsupervised Learning）。有别于监督式学习算法，无监督式学习算法在训练过程中，并不知道其分类结果是否正确，亦即无法告诉它何种学习是正确的。其特点是仅需要提供输入样例，它会自动从样例中找出其潜在类别规则。当学习完成后，可以将其用在全新的样例上。
 
 
-无监督学习方法可以分为两类，一类为基于概率密度函数估计的方法，它试图找出数据集在特征空间的分布参数，再用特征空间分布进行分类处理。例如稀疏编码算法，它将原始数据表示为字典元素的一个线性组合：$x=D*x'$，我们用 $x$ 表示原始信号， $D$ 为我们得到的字典（Dictionary），通过字典 $D$ ， 原始信号 $x$ 能被完整地表示为 $x'$ 的线性组合。为了解决字典 $D$ 的退化（Degeneracy）问题，Hinton等人提出了稀疏自编码（Sparse Auto-encoder）学习算法。另一类称为基于样本间的相似性度量的聚类方法，它通过聚类方法将样本划分成不同类别，例如：Kmeans聚类算法。 
+无监督学习方法可以分为两类，一类为基于概率密度函数估计的方法，它试图找出数据集在特征空间的分布参数，再用特征空间分布进行分类处理。例如稀疏编码算法，它将原始数据压缩表示为字典（Dictionary）的一个线性组合：$x=D*x'$，我们用 $x$ 表示原始信号， $D$ 为我们得到的字典，通过字典 $D$ ， 原始信号 $x$ 能被完整地表示为 $x'$ 的线性组合。为了解决字典 $D$ 的退化（Degeneracy）问题，Hinton等人提出了稀疏自编码（Sparse Auto-encoder）学习算法。另一类称为基于样本间的相似性度量的聚类方法，它通过聚类方法将样本划分成不同类别，例如：Kmeans聚类算法。 
 
 \subsection{稀疏自动编码器算法}
-稀疏自动编码器算法能实现提取样本中的稀疏特征，是近年提出的一类有效的无监督学习算法。它把原始数据用隐藏层的特征空间向量表示，再把隐藏层特征解码成重构的输出层。这样，隐藏层中的特征信息就是输入层的一个压缩表示，而且有效减少了冗余信息。并且，压缩表示的特征很适合进一步用作分类器的输入集。该模型可以用来标注无标签的数据集，免去了繁复的人工打标签的操作，同时也能有效降低输入数据的维度，防止出现``维度灾难''（计算量会随着维度的增加呈指数倍增长）。
+稀疏自动编码器算法能实现提取样本中的稀疏特征，是近年提出的一类有效的无监督学习算法。它把原始数据用隐藏层的特征空间向量表示，再把隐藏层特征解码成重构的输出层。这样，隐藏层中的特征信息就是输入层的一个压缩表示，而且有效减少了冗余信息。并且，压缩表示的特征很适合进一步用作分类器的输入集。该模型可以用来标注无标签的数据集，免去了繁复的人工打标签的操作，同时也能有效降低输入数据的维度，防止出现``维度灾难''，即模型的计算时间和计算复杂度会随着维度的增加呈指数倍增长。
 
-当我们将稀疏性概念引入后，即我们希望 $x'$ 是稀疏的，只有较少的非零项，这样做最突出的优点是运算速度能有效提升，因为MATLAB只对非零元素进行操作。在模型选择过程中，我们有多种稀疏因子可以选取，例如$L_p-norm$因子，KL-divergence因子。
+当我们将稀疏性概念引入后，即我们希望 $x'$ 是稀疏的，只有较少的非零项，这样做最突出的优点是能有效提升运算速度。在模型选择过程中，我们有多种稀疏因子可以选取，例如$L_p-norm$因子，KL-divergence因子。
+
 
 \section{国内外研究现状}
 原型自动编码器能学习到数据中的非线性特征结构，它能提取出高位复杂的输入数据中的低维特征，将此特征用于深度学习其它模型的输入，能有效提升系统的精确度\cite{16}。
-自动编码器模型包括编码和解码两个主要步骤。在编码阶段，编码器将输入数据 $x$ 映射到隐含层特征$h$。在解码阶段，映射函数 $g(h)$ 将隐含层特征空间映射回重构的输入层$\hat x$ 。原型自动编码器模型在运用到实际条件中，演变产生各种修正的模型，按照其主要类别，大致分为：稀疏自动编码器、降噪自动编码器、鲁棒自动编码器和卷积自动编码器。
+自动编码器模型包括编码和解码两个主要步骤。在编码阶段，编码器将输入数据 $x$ 映射到隐含层特征$h$。在解码阶段，映射函数 $g(h)$ 将隐含层特征空间映射回重构的输入层$\hat x$ 。原型自动编码器模型在运用到实际条件中，演变产生各种修正的模型，按照其主要类别，大致分为：稀疏自动编码器、降噪自动编码器、鲁棒自动编码器和卷积自动编码器\cite{曲建岭2014深度自动编码器的研究与展}。
 
 \subsection{稀疏自动编码器}
-对稀疏性的兴趣源自于抽样理论-压缩传感（Compressed Sensing）的发展，采用压缩形式表示输入信号能更方便地对信号进行加工处理，如压缩、编码等。通过对原型自动编码器的隐藏层添加约束条件，并增加隐藏层节点个数，能在隐藏层中获得原始数据的结构性特征。假设自定编码器的输入为$x$，约束项为$\rho$，隐藏层神经元节点的平均激活度记作$\rho_j$。一般地，期望隐藏层的绝大多数神经元的取值在0 附近，少数神经元节点取值接近1，即只有少数神经节点处于激活状态。稀疏自动编码器能提取高位数据中的稀疏性特征，增加数据的线性可分性。然而原始数据分布规律不同，故需要较大的数据集来训练稀疏自动编码器以便完成的获取稀疏特征变量。另外也需要预先调节KL散度的惩罚值，并要求隐藏层的平均激活程度相同，致使实验的效果较差，容易出现欠拟合问题。
+对于JPEG图像的压缩算法，原始信号经过离散余弦变换只有，只有极少数原数是非0的，有效降低图片的大小，这就是信号的稀疏性表示。采用压缩形式表示输入信号能更方便地对信号进行加工处理，如信号和图像的采集处理、编码和信息论等。通过对原型自动编码器的隐藏层添加约束条件，并增加隐藏层节点个数，能在隐藏层中获得原始数据的结构性特征。假设自定编码器的输入为$x$，约束项为$\rho$，隐藏层神经元节点的平均激活度记作$\rho_j$。一般地，期望隐藏层的绝大多数神经元的取值在0 附近，少数神经元节点取值接近1，即只有少数神经节点处于激活状态。稀疏自动编码器能提取高位数据中的稀疏性特征，增加数据的线性可分性。然而原始数据分布规律不同，故需要较大的数据集来训练稀疏自动编码器以便完成的获取稀疏特征变量。另外也需要预先调节KL散度的惩罚值，并要求隐藏层的平均激活程度相同，致使实验的效果较差，容易出现欠拟合问题。
 
 \subsection{降噪自动编码器}
 降噪自动编码器（Denoising Auto-encoder）是在自动编码器的输入层中加入高斯分布的随机噪声，进而自动编码器在训练过程中，尝试学习去除这种噪声，解码过程中，模型根据噪声统计特性，从未受到干扰的数据中，估计出原始数据的分布规律，从而消除添加的高斯噪声。最终，自动编码器学习到的特征具有更强的鲁棒性，拥有更强的泛化能力\cite{28}。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{./Pictures/deAE.eps}
 \caption{降噪自动编码器模型\label{fig:tanh}}
@@ -95,7 +95,7 @@ BP算法由数据流的前向传播和误差信号的反向传播两个过程构
 
 \subsection{卷积自动编码器}
 在计算机图像处理领域，卷积自动编码器能有效解决图像中存在的池化和白化问题。上述讨论的模型在应用到图形图像领域后，需要配置大量冗余的参数，计算效率也大大降低。然而卷积自动编码器能获取局部特征，完整保留边缘特征，其算法模型如图\ref{fig:conv}所示。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{./Pictures/conAE.eps}
 \caption{卷积自动编码器模型\label{fig:conv}}
@@ -108,7 +108,7 @@ BP算法由数据流的前向传播和误差信号的反向传播两个过程构
 
 自动编码器的训练时间过长，系统参数调优需要很多设计技巧，且人工神经网络中参数的物理意义一直以来难以被合理解释，自动编码器训练获得的特征也是如此，研究人员尚无法认识学习到的特征的物理意义何在。自动编码器算法较为单一，尽管我们可以通过重复使用该模型，不断堆叠，提取相对更深层次的特征，但是理论上的证明尚未完善，无法确证学习获得的特征有助于后续分类器的设计。另一方面，通过简单堆叠获得的深度模型，需要模型整体调优（Fine Tuning）才能达到有效的精确率提升。然而调优过程运算过程更加漫长，无法满足实际开发需要。目前使用的建模手段，即使用自动编码器作为预训练手段，通过堆叠自动编码器提取深层次的特征和深层模型整体调优手段，相比于传统机器学习算法相对单一，无法满足训练复杂网络的需求\cite{40}。
 
-2. 现有的预训练算法对类标签数据集有较强的依赖性，远没有达到``无监督学习''\cite{41}。不仅如此，现有算法对硬件需求极高，模型训练过程中，原始数据矩阵和参数矩阵不断迭代，占用极大内存，同时繁复的矩阵运算考验着系统的并行能力，随着处理数据规模的增大，现有软硬件环境无法满足其需求。使用图形处理器（GPU）用作矩阵并行运算的硬件环境将是大势所趋，若能开发针对特定算法模型的硬件框架，利用高并发的硬件指令实现软件算法将会极大提升算法训练时间，那将革新现有的算法效率\cite{43}。
+2. 现有的预训练算法对类标签数据集有较强的依赖性，远没有达到``无监督学习''\cite{41}。不仅如此，现有算法对硬件需求极高，模型训练过程中，原始数据矩阵和参数矩阵不断迭代，占用极大内存，同时繁复的矩阵运算考验着系统的并行能力，随着处理数据规模的增大，现有软硬件环境无法满足其需求。使用Navida的图形处理器（GPU），由于其专门提供了 CUDA并行编程环境，用作矩阵并行运算的硬件环境将是大势所趋，若能开发针对特定算法模型的硬件框架，利用高并发的硬件指令实现软件算法将会极大提升算法训练时间，那将革新现有的算法效率\cite{43}。
 
 3. 另一方面，生物神经学科发展远远落后于深度学习发展速度，现有理论的突破需要神经科学的进一步研究成果\cite{36,37}。现有模型仅源于十几年前的生物学人体神经的发现，若能在生物科学上对人脑运作模型有所突破发现，那能帮助我们建立更加可靠的模型和理论。
 
@@ -118,13 +118,13 @@ BP算法由数据流的前向传播和误差信号的反向传播两个过程构
 2. 为了便于实验操作，故搭建web实验平台，以网络服务形式开放给用户使用。其计算模型是稀疏自动编码器模型，用户可以在实验平台上提交实验的数据集，和选择实验的数据预处理手段，当用户自定义完上述选项后就可以以任务形式提交到实验平台上，网站后台接收到用户的计算请求后，调用硬件资源开始计算。用户可以实时查看计算任务的进展，当任务完成后，平台将实验的数据及实验图表展示给用户。用户可以在线查看实验结果，以便进行后续数据分析。
 
 
-\chapter{开发环境及框架介绍}
+\chapter{开发环境及框架}
 \section{系统开发环境}
 现在有许多主流的操作系统，我们应当根据不同的使用需求，合理选择操作系统。例如为众人所熟知的 Win7 操作系统适用于家庭休闲使用，由于其病毒版本较多、对主流开源软件支持较差等原因，不适合选做系统开发环境。一般，我们系统开发、网站建设通常采用较为稳定、高效的 Linux 系统。Linux 开源系统中，又以 CentOS 作为主流的服务器的操作系统。本实验的环境配置为：CentOS 6 操作系统，Intel Xeon 24核 CPU，64GB内存。
 
-CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Linux的重要的一个发型系列产品。一直以来，由红帽公司负责维护，开发其更新和修复主要的功能缺陷。 当年，红帽公司本着开源的精神毅然将其开发的著名操作系统RHEL中的稳定的软件代码公开，并建立开发者社区来维护和更新其CentOS的系统架构。考虑到RHEL和CentOS拥有同样的源代码，因此有些企业针对部分服务器安装CentOS操作系统以替代昂贵的商业版的RHEL，CentOS的稳定的网络框架秉承RHEL操作系统的特点能满足苛刻的实践应用。RHEL和CentOS操作系统的主要不同点在，于CentOS并不包含RHEL开发的闭源代码库。CentOS对部分源代码进行修改，以便维护商家版权，减少不必要的纷争。
+CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Linux的重要的一个发型系列产品。一直以来，由红帽公司负责维护，开发其更新和修复主要的功能缺陷。 本着开源精神，红帽公司毅然将其开发的著名操作系统RHEL中的稳定的软件代码公开，并建立开发者社区来维护和更新其CentOS的系统架构。考虑到RHEL和CentOS拥有同样的源代码，因此有些企业针对部分服务器安装CentOS操作系统以替代昂贵的商业版的RHEL，CentOS的稳定的网络框架秉承RHEL操作系统的特点能满足苛刻的实践应用。RHEL和CentOS操作系统的主要不同点在，于CentOS并不包含RHEL开发的闭源代码库。CentOS对部分源代码进行修改，以便维护商家版权，减少不必要的纷争。
 
-在此操作系统系统之上，安装MATLAB软件所依赖的Oracle JDK 8。同时本实验所采用的 Django 1.8 开发框架依赖于Python 2.7 和 MySql 6 。均需要预先安装。
+在此操作系统之上，安装 MATLAB 软件所依赖的Oracle JDK 8。同时本实验所采用的 Django 1.8 开发框架依赖于Python 2.7 和 MySql 6 。均需要预先安装。
 \begin{minted}[mathescape,
                numbersep=5pt,
                gobble=2,
@@ -135,10 +135,10 @@ CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Li
     sudo yum install mysql-server         
     sudo pip install django               
 \end{minted}
-按照代码顺序，我们需要配置安装操作系统的开发环境依赖库，接着我们需要安装python用于语言开发的配置包，然后是安装mysql客户端。最后当我们需要配置网络开发环境，即通过python 的包管理机制安装 Django。
+按照代码顺序，我们需要配置安装操作系统的开发环境依赖库，接着我们需要安装python用于语言开发的配置包，然后是安装mysql客户端。最后当我们需要配置网站开发环境，即通过python 的包管理机制 pip 安装 Django。
 
-\section{编程语言和编程环境的选择}
-本实验采用 MATLAB Script \footnote{MATLAB: cn.mathworks.com}作为算法模型的实现语言（需要Java JDK支持），采用 Python 2.7 作为实验平台的开发语言，采用主流的Web框架django。主要基于以下考虑：MATLAB中配备丰富的矩阵运算函数接口，并且MATLAB底层的矩阵运算实现机制均进行了并行优化处理。相对于Python的numpy开发库，MATLAB有更高效运算效率，采用Python 脚本语言后台调用 MATLAB 接口函数比采用纯粹的 Python 开发框架能有效增强平台的响应时间。另一方面，尽管 MATLAB 配备了 GUI 开发框架，开发人员能直接拖拽组建搭建实验的界面，针对运算时间较短的程序采用MATLAB GUI是一个很好的选择。然而，本算法的迭代求解最优参数环节耗时巨大，会导致界面长时间无法响应用户的交互需求，同时若采用异步线程维护GUI线程和后台运算线程，会造成不必要的CPU和内存的开销，故采用第三方语言实现平台界面的搭建，Django正是这样的敏捷开发的框架，能在较短的开发周期内实现用户的功能需求。
+\section{编程语言和编程环境}
+本实验采用 MATLAB Script \footnote{MATLAB: cn.mathworks.com}作为算法模型的实现语言（需要Java JDK支持），采用 Python 2.7 作为实验平台的开发语言，采用主流的Web框架django。主要基于以下考虑：MATLAB中配备丰富的数学函数库，并且MATLAB底层的矩阵运算实现机制均进行了并行优化处理\cite{刘卫国2002按对象分层决策矩阵的逼近理想解法的}。相对于Python的numpy开发库，MATLAB有更高效运算效率，采用Python 脚本语言后台调用 MATLAB 接口函数比采用纯粹的 Python 开发框架能有效增强平台的响应时间。另一方面，尽管 MATLAB 配备了 GUI 开发框架，开发人员能直接拖拽组建搭建实验的界面，针对运算时间较短的程序采用MATLAB GUI是一个很好的选择。然而，本算法的迭代求解最优参数环节耗时巨大，会导致界面长时间无法响应用户的交互需求，同时若采用异步线程维护GUI线程和后台运算线程，会造成不必要的CPU和内存的开销，故采用第三方语言实现平台界面的搭建，Django正是这样的敏捷开发的框架，能在较短的开发周期内实现用户的功能需求。
 
 另外，本实验环境为CentOS操作系统，在配置MATLAB之前，需要配置Oracle Java JDK\footnote{Java Development Kits: www.oracle.com}开发环境。由于Linux/Unix操作系统默认配置open JDK作为替代Sun Java JDK的java开发包，这在通用依赖java的软件中尚未构成问题。然而例如MATLAB，Eclipse，Hadoop等软件必须依赖Sun Java JDK开发包和Sun Java JRE开发环境，故需要配置linux下Sun Java开发环境，以便后续步骤顺利进行。
 \begin{minted}[mathescape,
@@ -152,7 +152,6 @@ CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Li
    export PATH=$PATH:$JAVAHOME
 \end{minted}
 首先我们需要从 Oracle官网下载 Java安装包，需要注意的是我们需要下载支持 Linux 的rpm安装包。接着是使用rpm 包管理器解压安装包，即完成了安装过程。为了其他软件能自动找到我们安装的jdk 软件，我们还需要配置 系统的 \texttt{PATH} 变量，加入java的路径。
-
 
 
 为了在终端中能直接使用MATLAB软件，我们还需要在安装完MATLAB软件后对其进行配置：
@@ -177,8 +176,8 @@ CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Li
 
 
 \subsection{网站框架}
-网站采用Django框架，它是一种符合MVC设计模式（即模型Model，视图View和控制器Controller）的新一代Web框架。它最初用来维护开发新闻内容的网站，并于2005年在BSD在许可证下发布，本实验平台开发采用最新版本Django 1.8。后台的支持数据库可以选用Mysql，SQLite，Oracle.本实验平台采用通用的Mysql 5.6版本，SQLite是基于文本的数据库过于简单，不宜用作网站持续运营。
-\begin{longtable}{|l|l |}
+网站采用MVC模式的 Django 框架（即模型 Model，视图 View 和控制器 Controller）。它最初用来维护开发新闻内容的网站，并于2005年在BSD在许可证下发布，本实验平台开发采用最新版本Django 1.8。后台的支持数据库可以选用Mysql，SQLite，Oracle.本实验平台采用通用的Mysql 5.6版本，SQLite是基于文本的数据库过于简单，不宜用作网站持续运营。
+\begin{longtable}{|l|l|}
 \caption{MVC设计模式功能详解表格}\\ 
 \hline
 层次&职责 \\
@@ -187,17 +186,17 @@ CentOS\footnote{CentOS: www.centos.org}是企业级社区操作系统，它是Li
 \hline
 模板(Template) & 表现层，如何在页面或其它类型文档中进行显示。\\
 \hline
-视图（View）&业务逻辑层，模型与模板之间的桥梁。\\
+视图（View）&业务逻辑层，模型与模板之间的逻辑处理。\\
 \hline
 \end{longtable}
 
 
-Django框架的核心技术包括：面向对象的数据模型映射器；基于正则表达式的URL分发器；一个视图系统，用于处理网络请求；以及一个模板系统。
+Django框架的核心技术包括：面向对象的数据模型映射器；基于正则表达式的URL分发器；一个视图系统，用于反馈用户的网络请求；以及一个模板系统。
 
-\subsection{Bootstrap模板介绍}
+\subsection{Bootstrap模板}
 为了使网站美观大方，同时免去人工设计页面元素的烦恼，引入流行的Bootstrap\footnote{Bootstrap 中文官网：bootcss.com}网站框架能有效提升网页的美观度，节省开发人员时间，以充分利用时间用于开发核心的功能。Bootstrap是 Twitter 推出的用于前端开发的开源工具包，基于HTML 5 和 CSS 3开发的，并且兼容 JQuery插件。Bootstrap提供的丰富的Web组件能用来快速搭建漂亮、功能完备的网站，用户也可以根据自己的需求来裁剪代码。
 
-\subsection{GIT插件介绍}
+\subsection{GIT插件}
 由于开发实验平台和算法模型的时候需要进行代码备份与记录，所以需要外部的版本控制软件来维护实验代码，以防止异常的出现损坏实验的代码。GIT 是常见的分布式版本控制软件，能跟踪记录软件开发过程中的迭代。本实验的代码均采用 github.com 网站提供的远程 GIT 服务器，每当进行算法迭代更新之后，均将修改的代码记录上传至服务器，以作备份，一旦本地代码出现异常，可以使用远程的代码库恢复本地，减少不必要的损失。
 
 Django的开发IDE Pycharm已经完善的集成了 GIT 版本控制插件，能直接 commit 和 Push 代码至远程版本控制服务器。MATLAB R2014a中尚未完善支持 GIT 插件，故采用安装 GIT 软件\footnote{GIT 客户端：www.git-scm.com}来维护 MATLAB 的算法开发目录下的文件。
@@ -213,7 +212,7 @@ Django的开发IDE Pycharm已经完善的集成了 GIT 版本控制插件，能�
 
 
 \section{本章小结}
-这一章主要介绍了该实验的开发环境的选取准则和项目的基本设计框架模型。
+这一章主要讲述了该实验的开发环境的选取准则和项目的基本设计框架模型。
 
 整个开发环境均采用主流的开发工具。如操作系统选用稳定的CentOS操作系统，集成开发环境选择 Pycharm 4 和 MATLAB R2014a，以及后续的服务器引擎 Nginx 。同时，也需要进一步时间来学习如何使用这些工具。
 
@@ -222,16 +221,16 @@ Django的开发IDE Pycharm已经完善的集成了 GIT 版本控制插件，能�
 为了维护开发过程中的项目软件，减少人为错误带来的灾难性后果，例如：无意间删除了部分代码文件，磁盘烧毁，系统宕机。通过 git 插件和 github.com 版本控制服务器，用户能方便的提交当前代码至远程服务器作为备份资料，最大程度的保障本地代码的完整性。
 
 
-\chapter{算法数学模型介绍}
+\chapter{建模过程}
 \section{预备知识}
 \subsection{信息熵}
-熵，按照物理的定义是热力学系统的无序的量度。在信息论中，熵是对不确定性的测量。熵越高，则能传输越多的信息；熵越低，则意味着传输的信息越少。
+熵，按照物理的定义是热力学系统的无序的量度。在信息论中，熵是对不确定性的测量。
 
-信息熵是每条消息中包含的信息的平均量，这里的``消息''代表来自分布或数据流中的时间、样本或特征。依据 $Boltzmann's~H-theorem$， 香农把随机变量 $X$ 的熵值 $H$ 定义如下，其值域为 $\{x_1,\dots,x_n\}$：
+信息熵是每条消息中包含的信息的平均量，这里的``消息''代表来自分布或数据流中的时间、样本或特征。熵越高，则能传输更多的信息；熵越低，则传输的信息更少。依据 $Boltzmann's~H-theorem$， 对于随机变量 $X$ 其熵值 $H$ 定义如下：
 \begin{equation}
 	H(X)=-\sum\limits_i{P(x_i)\log_b P(x_i)};
 \end{equation}
-其中，$b$是对数所使用的底，通常是2，自然常数 $e$ 或者10。当 $b=2$，熵的单位是 bit。若 $p_i=0$ 时，对于一些 $i$ 值，对应的被加数 $0\log_b 0=0$，这与公式的极限一致。
+其中，$b$是对数所使用的底，通常是2，自然常数 $e$ 。其值域为 $\{x_1,\dots,x_n\}$。当 $b=2$，熵的单位是 bit，通常默认参数为$b=e$。若 $p_i=0$ 时，$0\log_b 0=0$，这与公式趋向于0时的极限一致。
 \begin{equation}
 	H(X)=-\lim\limits_{p\to 0+}{p\log_b p=0};
 \end{equation}
@@ -240,7 +239,7 @@ Django的开发IDE Pycharm已经完善的集成了 GIT 版本控制插件，能�
 \begin{equation}
 	H(X|Y)=-\sum\limits_{i,j}{p(x_i,y_j)\ln \frac{p(y_j)}{p(x_i,y_j)}};
 \end{equation}
-其中 $p(x_i,y_i)$ 为 $X=x_i,Y=y_i$ 时的概率。其含义为知道 $Y$ 的前提下随机变量 $X$ 的随机性的量。
+其中 $p(x_i,y_i)$ 为 $X=x_i,Y=y_i$ 时的概率。其含义为：预先知道 $Y$ 的前提下，随机变量 $X$ 的残余随机性的度量。
 
 概率分布 $p,q$ 交叉熵的定义为：
 \begin{equation}
@@ -278,22 +277,20 @@ p(y|x;\theta) = (h_{\theta}(x))^y(1-h_{\theta}(x))^{1-y}
 \end{aligned}\end{equation}
 
 
-\section{数据预处理操作}
+\section{数据预处理}
 数据预处理中，标准的第一步是数据归一化。为了能够比较不同的属性（比如，在聚类分析中通过计算距离或相似性），特别是当属性具有不同的度量范围时（比如，温度具有凯尔文和摄氏表达方式），就需要用到规范化和其它的一些属性变换技术。``规范化''常用的代名词是``最小-最大变换''：属性值被变换到一个特定的范围内，比如$X \in [0,1]$。
 \begin{equation}
 	x'=\frac{x-x_{min}}{x_{max}-x_{min}};
 \end{equation}
 
-特征归一化常用的方法包含如下几种：简单缩放、逐样本均值消减、特征标准化（使数据集中所有特征都具有零均值和单位方差）\cite{DBLP:journals/prl/AksoyH01}。
+特征归一化常用的方法为：简单缩放、逐样本均值消减、特征标准化（使数据集中所有特征都具有零均值和单位方差）\cite{DBLP:journals/prl/AksoyH01}。
 
-(1) \textbf{简单缩放（Simple Rescaling）：}我们通过简单缩放来重新调节各个维度的值域，使得最终的数据向量落在 [0,1]或[-1,1] 的区间内（根据数据情况而定）。针对图像，我们将像素在 [0,255] 区间除以 255，使它们缩放到 [0,1] 中.
+(1) \textbf{简单缩放（Simple Rescaling）：}我们通过简单缩放来重新调节各个维度的值域，使得最终的数据向量落在 [0,1]或[-1,1] 的区间内（根据实验要求确定）。针对图像，我们将像素在 [0,255] 区间除以 255，使它们缩放到 [0,1] 中.
 \begin{equation}
 	x'=\frac{x}{255};
 \end{equation}
 
-(2) \textbf{逐样本均值消减（Per-example Mean Subtraction）：}如果数据分布是均匀的（High Dispersal）。对每一行（一种特征在不懂样本的时候取值不同）的特征分布相似，或者说每种特征都应该具备相似的统计特征。具体来说，对矩阵的每一行，我们取这行所有元素的（一种特征在不同样本的时候取值不同）的平方后的均值作为其统计特征的描述。每一行都存在一个均值，那么每行的均值都应该是一样的，这样就可以认为所有的特征都极有相似的分布。这种属性就成为高分散性（High Disperal）。
-
-若数据每一个维度的统计都服从相同分布，那么可以考虑在每个样本上减去数据的统计平均值(逐样本计算)。
+(2) \textbf{逐样本均值消减（Per-example Mean Subtraction）：}如果数据分布是均匀的（High Dispersal）。则每一行的特征分布相似，或者说每种特征都应该具备相似的统计特征。那么，对矩阵的每一行，我们在每个样本上减去取这行所有元素的（一种特征在不同样本的时候取值不同）的均值。每一行都存在一个均值，那么每行的均值都应该是一样的，这样就可以认为所有的特征都极有相似的分布。这种属性就成为高分散性（High Disperal）。其计算公式为：
 \begin{equation}
 	x'=x-E(x),E(x)=\frac{1}{N}\sum\limits_{i=1}^{N}{x_i};
 \end{equation}
@@ -315,20 +312,20 @@ p(y|x;\theta) = (h_{\theta}(x))^y(1-h_{\theta}(x))^{1-y}
 	\label{sigmoid}
 	f(x)=\frac{1}{1+e^{-x}}
 \end{equation}
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{./Pictures/sigmoid.eps}
-\caption{simgoid函数图像\label{fig:sigmoid}}
+\caption{SIGMOID 函数图像\label{fig:sigmoid}}
 \end{figure}
 
 或者也可以是$tanh$函数，其取值域为 $[-1,1]$，其表达式和函数图像为：
 \begin{equation}
 	f(x)=\frac{1-e^{-x}}{1+e^{-x}}
 \end{equation}
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.6]{./Pictures/tanh.eps}
-\caption{tanh函数图像\label{fig:tanh}}
+\caption{TANH 函数图像\label{fig:tanh}}
 \end{figure}
 
 
@@ -353,19 +350,18 @@ p(y|x;\theta) = (h_{\theta}(x))^y(1-h_{\theta}(x))^{1-y}
 
 图\ref{fig:origAE} 展示了原型自动编码器的结构。原型自动编码器包含输入层、隐藏层和输出层，其中编码过程对应于输入层到隐藏层的映射，解码过程对应于隐藏层到输出层的映射。
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{./Pictures/origAE.eps}
-\caption{原型自动编码器模型（包含输入层、隐藏层、输出层）}
+\caption{原型自动编码器模型}
 \label{fig:origAE}
 \end{figure}
 
 
-\section{稀疏惩罚因子的种类}
+\section{稀疏惩罚因子种类}
 参数稀疏化的优点主要是：特征选择（Feature Selection）、可解释性（Interpretability）\cite{DBLP:journals/jmlr/Hoyer04}。稀疏规则化算子的引入能自动选择特征，去掉没有信息价值的特征点，即把这些特征对应的权重重置为0。只有少数特征对最终的决策其作用，有助于分析决策过程。
 
-
-通过对原型自动编码器的隐藏层添加约束条件，并增加隐藏层节点个数，我们能在隐藏层中获得原始数据的结构性特征\cite{wright2014sparse}。假设自定编码器的输入为$x$，我们的约束项为$\rho$，隐藏层神经元节点的平均激活度记作$\rho_j$。一般地，我们期望我们隐藏层的绝大多数神经元的取值在0 附近，少数神经元节点取值接近1，即只有少数神经节点处于激活状态。我们期望$\rho$取值在0附近（例如，0.05），同时令$\frac{1}{m}\sum_j^m{\rho_j}=\rho$。在稀疏自动编码器中，我们在模型的代价函数中增加稀疏惩罚项$KL(\rho||\rho_j)$，其表达式为：
+通过对原型自动编码器的隐藏层添加约束条件，使得绝大部分节点的数值接近0，我们能在隐藏层中获得原始数据的结构性特征\cite{wright2014sparse}。假设自定编码器的输入为$x$，我们的约束项为$\rho$，隐藏层神经元节点的平均激活度记作$\rho_j$。一般地，我们期望我们隐藏层的绝大多数神经元的取值在0 附近，少数神经元节点取值接近1，即只有少数神经节点处于激活状态。我们期望$\rho$取值在0附近（例如，0.05），同时令$\frac{1}{m}\sum_j^m{\rho_j}=\rho$。在稀疏自动编码器中，我们在模型的代价函数中增加稀疏惩罚项$KL(\rho||\rho_j)$，其表达式为：
 \begin{equation}
 	KL(\rho||\rho_j)=\rho \ln \frac{\rho}{\rho_j} + (1-\rho)\ln \frac{1-\rho}{1-\rho_j}
 \end{equation}
@@ -388,7 +384,7 @@ p(y|x;\theta) = (h_{\theta}(x))^y(1-h_{\theta}(x))^{1-y}
 	D_{\mathrm{KL}}(p\|q) = \int_{-\infty}^\infty p(x) \, \ln\frac{p(x)}{q(x)};
 \end{equation}
 显然，当两个随机分布完全相同时，即$p=q$，其相对熵为0。当两个随机分布的差别增加时，其相对熵期望值也增大。图表\ref{fig:kl-divergence} 表明，该测量函数是非对称的函数，即 $D_{KL}(p\|q) \ne D_{KL}(q\|p)$， 从分布 $p$ 到 $q$ 的距离通常并不等于从 $q$ 到 $p$ 的距离。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.2]{./Pictures/kl.eps}
 \caption{KL差异因子的函数图像}
@@ -398,7 +394,7 @@ p(y|x;\theta) = (h_{\theta}(x))^y(1-h_{\theta}(x))^{1-y}
 
 
 \subsection{L1范数因子}
-L1范数是指向量中各个元素绝对值之和，也叫``稀疏规则算子（Lasso Regularization）''，它是L0范数的最优凸近似\cite{DBLP:conf/cvpr/YangYGH09}。L0范数指的是向量中非0元素的个数。如果我们用L0范数来规则化参数矩阵W的话，就是希望W的大部分元素都是0.换句话说，就是让参数W是稀疏的。由于L0范数很难求解（NP难问题），相对的L1范数更易求解，所以在一定条件下，求解L0 范数以概率1意义下等价于L1范数:
+L1范数也叫``稀疏规则算子（Lasso Regularization）''，是指向量中各个元素绝对值之和。它是L0范数的最优凸近似\cite{DBLP:conf/cvpr/YangYGH09}。L0范数指的是向量中非0元素的个数。如果我们用L0范数来规则化参数矩阵W的话，就是希望W的大部分元素都是0.换句话说，就是让参数W是稀疏的。由于L0范数很难求解（NP难问题），相对的L1范数更易求解，所以在一定条件下，求解L0 范数以概率1意义下等价于L1范数:
 \begin{equation}
 \left\{ \begin{array}{l}
 \min \|x\|_0 \\
@@ -430,7 +426,6 @@ S_{L2}=\sum\limits_{i=1}^{n}{h_{\theta}(x^{(i)})^2};
 
 
 \subsection{Student-t惩罚因子}
-正态分布（Normal Distribution）是统计论中的一种重要的理论分布，是许多统计方法的理论基础。
 \begin{defn}[正态分布]
 	若随机变量 $X$ 服从一个均值为 $\mu$ 、方差为 $\sigma$ 的概率分布，其概率密度函数为：
 	\begin{equation}
@@ -444,12 +439,11 @@ S_{L2}=\sum\limits_{i=1}^{n}{h_{\theta}(x^{(i)})^2};
 	f(x)=\frac{1}{\sqrt{2\pi}}\exp\left(-\frac{x^2}{2}\right)
 	\end{equation}
 \end{defn}
-
-由于在实际工作中，往往 $\sigma$未知，故我们常用样本标准差 $s$ 作为 $\sigma$ 的估计值，成为：
+正态分布（Normal Distribution）是许多统计方法的理论基础。由于在实际工作中，往往 $\sigma$未知，故我们常用样本标准差 $s$ 作为 $\sigma$ 的估计值，成为：
 \begin{equation}
 	t=\frac{\overline x-\mu}{s/\sqrt{n}}
 \end{equation}
-其中 $n$ 为样本数量，$\overline x$为样本平均值（$\overline x=(x_1+x_2+\cdots+x_n)/n$），$s$为样本标准差（$s=\frac{1}{n-1}\sum\limits_{i=1}^n{(x_i-\overline {x_n})^2}$），$\mu$ 为总体平均值。由于样本标准差有抽样波动，于是在用 $s$ 代替 $\sigma$ 后，上式便不呈正态分布而呈t分布。
+其中 $n$ 为样本数量，$\overline x$为样本平均值（$\overline x=(x_1+x_2+\cdots+x_n)/n$），$s$为样本标准差（$s=\frac{1}{n-1}\sum\limits_{i=1}^n{(x_i-\overline {x_n})^2}$），$\mu$ 为总体平均值。由于样本标准差随着抽样手段而波动，于是在用 $s$ 代替 $\sigma$ 后，上式便不呈正态分布而呈t分布。
 
 Student-t 统计概率分布模型由 William Gosset 在1908年发表\cite{DBLP:conf/nips/WellingHO02}，其的概率分布函数为：
 \begin{equation}
@@ -469,17 +463,17 @@ S_{student}(x)=\sum\limits_{i=1}^{n}{log(1+h_{\theta}^2(x^{(i)}))};
 S'_{student}(x)=\frac{2x}{1+x^2};
 \end{equation}
 其数学函数和其一阶导数图像，如图\ref{fig:t}，\ref{fig:dt}所示。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/t.eps}
-\caption{Student-t因子的函数图像}
+\caption{STUDENT-T 因子的函数图像}
 \label{fig:t}
 \end{figure}
 
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
-\includegraphics[scale=0.5]{./Pictures/dt.eps}
-\caption{Student-t因子函数一阶导数图像}
+\includegraphics[scale=0.5]{./Pictures/pt.eps}
+\caption{STUDENT-T 因子函数一阶导数图像}
 \label{fig:dt}
 \end{figure}
 
@@ -515,9 +509,8 @@ S'_{student}(x)=\frac{2x}{1+x^2};
 
 
 
-
-\section{迭代优化函数的选取}
-拟牛顿法（Quasi-Newton Methods）是求解非线性优化问题的最有效的方法之一，于20世纪50年代由美国 Argonne 国家实验室的物理学家W.V.Davidon 提出的。不久R.Fletcher和M.J.D.Powell证实了这种新的算法 远比其它方法快速可靠，使得非线性优化这门学科在一些时间突飞猛进。在之后的20年里，拟牛顿方法得到了蓬勃发展出现了大量的变形公式以及是以百计的相关论文。DFP方法、BFGS方法以及L-BFGS算法都是重要的拟牛顿法。先介绍什么是牛顿法，为此，考虑如下无约束的极小化问题：
+\section{迭代优化函数选取}
+拟牛顿法（Quasi-Newton Methods）能有效求解非线性优化问题，由20世纪50年代由美国 Argonne 国家实验室的W.V.Davidon 提出的。不久，R.Fletcher和M.J.D.Powell证明这种算法远比传统方法快速可靠，使得非线性优化这门学科在这之后突飞猛进。在之后的20年里，拟牛顿方法出现了大量的变形公式以及是以百计的相关论文\cite{陈姗2013求解无约束最优化问题的一个新的拟牛顿方法}。DFP方法、BFGS方法以及L-BFGS算法都是重要的拟牛顿法。先介绍什么是牛顿法，为此，考虑如下无约束的极小化问题：
 \begin{equation}
 	\label{equ:mins}
 	\min_{x}{f(x)},x=(x_1,x_2,\dots，x_N )^T \in R^N 
@@ -538,21 +531,21 @@ S'_{student}(x)=\frac{2x}{1+x^2};
 \end{equation}
 产生的序列$\{x_k \}$来逼近$f(x)$的极小点。在一定条件下，$\{x_k \}$可以收敛到$f(x)$的极小点。
 
-当目标函数是二次函数时，由于二阶泰勒展开函数与原目标函数不是近似而是完全相同的二次式，海森矩阵退化成一个常数矩阵，从任意初始点出发，只需一步迭代就可以达到$f(x)$的极小点$x^*$，因此牛顿法是一种具有二次收敛性的算法。对于非二次函数，函数的二次性态较强，则其的收敛速度也是很快的，这是牛顿法的主要优点。但原始牛顿法由于迭代公式中没有步长因子，而是定长迭代，对于非二次型目标函数，有时会使函数值上升，即出现$f(x_{k+1 }>f(x_k ))$的情况，这表明原始牛顿法不能保证函数值稳定地下降，在严重情况下甚至可能造成迭代点列$\{x_k\}$的发散而导致计算失败。
+若目标函数是二阶函数，由于二阶函数泰勒展开与原目标函数是完全相同的二次式，海森矩阵退化成一个常数矩阵，从任意初始点出发，只需一步迭代就可以达到$f(x)$的极小点$x^*$，因此对于非二次函数，若函数的二次性态较强，则其的收敛速度也是很快的，这是牛顿法的主要优点。但原始牛顿法由于迭代公式中采用的是定长迭代，对于非二次型目标函数，有时会使目标函数值上升，即出现$f(x_{k+1 }>f(x_k ))$情况，这表明原始牛顿法不能保证函数值稳定地下降，在特殊情况下甚至可能造成迭代点列$\{x_k\}$的发散，从而无法计算其最优解。
 \subsection{拟牛顿方法}
-拟牛顿方法的基本思想是：不用二阶偏导函数而构造出可以近似海森矩阵的正定对称阵，在``拟牛顿''的条件下优化函数。不同的构造方法就产生了不同的拟牛顿方法。BFGS算法是Broyden，Fletcher，Goldfarb，Shanno四位优化大家在1970年几乎同时从不同的优化角度提出的。从发明到现在的40多年时间里，它仍然被认为是最好的拟牛顿算法。但是该方法的矩阵存储量为$n^2$ ，因此维度很大时内存不可接受。同时，矩阵非稀疏会导致训练速度慢。针对BFGS的缺点，主要在于如何合理的估计出一个Hessian矩阵的逆矩阵，L-BFGS的基本思想是只保存最近的m次迭代信息，从而大大降低数据存储空间 。
+拟牛顿方法的基本思想是：不用二阶偏导函数而构造出可以近似海森矩阵的正定对称阵，在``拟牛顿''的条件下优化函数。不同的构造方法就产生了不同的拟牛顿方法。BFGS算法是Broyden，Fletcher，Goldfarb，Shanno四位优化大家在1970年几乎同时从不同的优化角度提出的。时至今日，它仍然被认为是最好的拟牛顿算法。但是该方法的矩阵存储量为$n^2$ ，因此维度很大时内存不可接受。同时，矩阵非稀疏会导致训练速度慢。针对BFGS的缺点，L-BFGS的基本思想是只保存最近的m次迭代信息，从而大大降低数据存储空间 。
 
 本实验对稀疏自动编码器和Softmax分类器的系统代价函数参数优化阶段采用L-BFGS算法\cite{nocedal1980updating,liu1989limited}。其流程步骤如图所示。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.7]{./Pictures/optimize.eps}
-\caption{实验研究的基本框架\label{fig:framework}}
+\caption{优化方法的基本步骤\label{fig:framework}}
 \end{figure}
 对于参数矩阵的初始化问题，我们采用均匀分布模型对其进行随机初始化操作。记每一层的权重参数矩阵为$W^l$，则：
 \begin{equation}
   -\sqrt{\frac{6}{(fan_{in} + fan_{out})}} \le W^l \le \sqrt{\frac{6}{(fan_{in} + fan_{out})}}
 \end{equation}
-其中 $fan_{in}$是该层神经网络输入节点数量，$fan_{out}$是该层神经网络输出节点数量。
+其中 $fan_{in}$是该层神经网络输入节点数量，$fan_{out}$是该层神经网络输出节点数量\cite{张娇2011基于}。
 
 MATLAB中调用优化函数的方式为：
 \begin{minted}[mathescape,
@@ -571,15 +564,13 @@ MATLAB中调用优化函数的方式为：
                                    beta, unlabeledData,...
                                    gamma,epsilon), ...
                                    opttheta, options);
-      
-    
 \end{minted}
 首先将优化函数的路径``minFunc''添加至MATLAB环境中，其次配置优化函数为``L-BFGS''，最大的迭代次数为400次，最后将自动编码器的代价函数以参数形式传给minFunc函数，最后该函数会返回最优化的opttheta。
 
 \section{交叉验证手段}
-交叉验证（Cross-Validation）主要用于建模应用中，例如PCR 、PLS 回归建模中。在给定的建模样本中，拿出大部分样本进行建模型，留小部分样本用刚建立的模型进行预报，并求这小部分样本的预报误差，记录它们的平方加和。这个过程一直进行，直到所有的样本都被预报了一次而且仅被预报一次。把每个样本的预报误差平方加和，称为PRESS（Predicted Error Sum of Squares）。
+交叉验证（Cross-Validation）主要用于PCR 、PLS 回归建模中，目的是减小模型的泛化误差。在给定的数据样本中，可以使用60\% 数量的样本作为训练集进行建模，留20\%数量的样本检测用刚建立的模型，并记录它们的平方加和。每个样本的交叉验证误差平方和称为PRESS（Predicted Error Sum of Squares）。
 
-它能有效防止训练模型的过拟合问题，获得更稳定的模型。常用的精度测试方法主要是K折交叉验证，初始采样分割成K个子样本，一个单独的子样本被保留作为验证模型的数据，其它K-1个样本用来训练。交叉验证重复K次，每个子样本验证一次，平均K次的结果或者使用其它结合方式，最终得到一个单一估测。这个方法的优势在于，同时重复运用随机产生的子样本进行训练和验证，每次的结果验证一次，10折交叉验证是最常用的。
+它能有效防止训练模型的过拟合问题，获得更稳定的模型。常用的精度测试方法主要是K折交叉验证，这个方法的优势在于，同时重复运用随机产生的子样本进行训练和验证，每次的结果验证一次，通常选择 $k=10$。
 
 
 
@@ -606,8 +597,8 @@ sparseness(\textbf{x}) = \frac{\sqrt{N} - (\sum_i{|x_i|}) / \sqrt{\sum_i{x_i^2}}
 其中$y^{(i)}$是测试样例的正确类标签，$h_{\theta}(x^{(i)})$是Softmax分类器的预测类标签。
 
 \section{本章小结}
-本章介绍了算法流程的基本步骤，下图是实验算法的模型框架图：
-\begin{figure}[h]
+本章讲述了算法流程的基本步骤，下图是实验算法的模型框架图：
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.4]{./Pictures/framework.eps}
 \caption{实验研究的基本框架\label{fig:framework}}
@@ -618,11 +609,18 @@ sparseness(\textbf{x}) = \frac{\sqrt{N} - (\sum_i{|x_i|}) / \sqrt{\sum_i{x_i^2}}
 
 \chapter{实验平台设计}
 \section{功能模块设计}
-主要的功能模块分为：提交计算任务、展示任务运行状况、展示实验计算结果。
+主要的功能模块分为：展示任务运行状况、提交计算任务、展示实验计算结果，如下图\ref{fig:module}所示。
+\begin{figure}[H]
+\centering
+\includegraphics[scale=0.5]{./Pictures/module.eps}
+\caption{系统功能模块}
+\label{fig:module}
+\end{figure}
+
 
 \section{数据表设计与实现}
 本实验平台主要任务是管理用户提交的计算任务，故需要建立相应的数据表。为了方便管理，我们需要用户提供其用户名，本次计算任务的任务名还有相应的测试集和训练集，最后系统添加上提交任务的时间，一旦人物运行中出现差错，这些信息也方便管理员追踪检查错误源，排查问题。
-\begin{table*}[h]
+\begin{table*}[H]
 \begin{center}
 {
 \caption{DJANGO中定义的数据表设计}}
@@ -656,21 +654,21 @@ tasknote  & textfield() & 提交任务时的注记 \\
 另一方面，考虑到界面设计的美观大方，采用时下流行的 Bootstrap 技术，选取 BeyondAdmin 模板作为Django框架的网页开发的静态模板。在静态模板中添加django框架的动态编程语言，完成系统所需的功能需求。
 
 第一个界面是统计用户提交的计算任务，以表格的形式展示用户的任务是否正在运行（In Progress），或者遇到什么错误（Issued），或者已经成功结束运算（Finished）。若是遇到什么问题，需要管理员在后台查询错误原因，将信息反馈给用户。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{./Pictures/django01.png}
 \caption{任务统计界面\label{fig:framework}}
 \end{figure}
 
 第二个界面是用户提交计算任务界面，用户填写任务名称和提交训练集和测试集，与此同时，用户可以选择数据集数初始化手段。针对不同的需要合理选择预处理手段，将此功能给用户选择，以便提高实验成功率。最后用户也可以选择填写一些实验注记，以便管理员维护。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{./Pictures/django02.png}
 \caption{任务提交界面\label{fig:framework}}
 \end{figure}
 
 最后一个界面是展示实验运算准确率，主要分为两张图表，一张是分类正确率随着稀疏参数变化的图表，另一张是特征稀疏度随着稀疏参数的变化的图表。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[width=0.7\linewidth]{./Pictures/django03.png}
 \caption{任务结果展示界面\label{fig:framework}}
@@ -685,18 +683,17 @@ tasknote  & textfield() & 提交任务时的注记 \\
                gobble=2,
                frame=lines,
                framesep=2mm]{Shell}
-    #后台调用MATLAB	             
     nohup MATLAB -nodisplay -nodesktop < script.m >run.log 2>run.err & 
 \end{minted}
 
-其中 $<$是输入重定向符号，$>$是输出重定向符号，$2>$是错误重定向符号。这里我们新建一个MATLAB脚本文件script.m，将测试集和训练集和目录写入，调用maltba算法模块，接着将这个script.m文件作为MATLAB软件的输入，实现了后台自动调用MATLAB算法模块的功能，与此同时，为了记录程序运行时的状态，我们将MATLAB程序的正确与错误输出重定向到文件中，以便后续维护所用。
+其中 $<$是输入重定向符号，$>$是输出重定向符号，$2>$是错误重定向符号。这里我们新建一个MATLAB脚本文件script.m，将测试集和训练集和目录写入，调用 MATLAB 算法模块，接着将这个script.m文件作为MATLAB系统的的默认输入文件，实现了后台自动调用MATLAB算法模块的功能，与此同时，为了记录程序运行时的状态，我们将MATLAB程序的正确与错误输出重定向到文件中，以便后续维护所用。
 
 
 \chapter{实验结果与分析}
-\section{实验采用的数据集介绍}
+\section{实验采用的数据集}
 \subsection{MNIST Handwritten Digits字符库}
-MNIST字符库包含0～9的训练数据集和0～9测试数据集两种图片，每张图片灰度级都是8。包含有60000个训练样本数据集和10000个测试用例\cite{lecun1998gradient}。它是NIST数据库的一个子集，这些数字图像已经被预处理，数字被置于图像中心，并且图像大小一致。这对于要尝试自己的学习技术和模式识别方法在真实世界中的效果的人来说，是一个好的数据库，它节省了大量处理和格式化的时间。
-\begin{figure}[h]
+MNIST字符库包含有60000张数字0～9训练样本数据集和10000张数字0～9的测试集，每张图片均为灰度图，取值域为 $[0,255]$\cite{lecun1998gradient}。它是NIST数据库的一个子集，这些数字图像已经被预处理和格式化，图像大小一致,数字位置一致。
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/mnist-icon.eps}
 \caption{MNIST数据库样例\label{fig:mnist-icon}}
@@ -708,7 +705,7 @@ MNIST字符库包含0～9的训练数据集和0～9测试数据集两种图片�
 NORB数据库主要用于三维物体形状识别实验 \cite{DBLP:conf/cvpr/LeCunHB04}。它包含50个玩具属于5类形象：四肢动物，人像，飞机，卡车和汽车。物体采集是在两台相机，6种光照条件下获取的。采集角度是30度到70度，每隔5度，并且在18个方位（0到340每20度）分别采集图像。训练集是由5种类别组成（标号为4，6，7，8，9），测试集选用剩下的实例（标号为0，1，2，3，5）。
 
 图像采集后，每张图片均已作预处理，物体对象已被放置在图像中心，缩放到统一的尺寸大小，并且图片的背景和阴影均统一。物体对象之间的差异主要为：光照变化、旋转角度、水平位移和垂直位移。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/norb-icon.eps}
 \caption{NORB数据库样例\label{fig:norb-icon}}
@@ -716,7 +713,7 @@ NORB数据库主要用于三维物体形状识别实验 \cite{DBLP:conf/cvpr/LeC
 
 \subsection{SVHN街道房屋数字数据库}
 SVHN数据集（The Street View House Numbers Dataset）是开发机器学习和数据预处理和格式要求最小的物体识别算法的真实世界的图像数据集\cite{netzer2011reading}。它和MNIST数据集的内容大致相似（例如，图像是小数字，但采用裁剪）级以上的标记数据的顺序（超过600000张图像），源于更加复杂的真实世界的案例（识别数字和数字的自然场景图像）。SVHN数据集采集自谷歌街景中房屋上面的数字。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/svhn-icon.eps}
 \caption{SVHN数据库样例\label{fig:svhn-icon}}
@@ -725,7 +722,7 @@ SVHN数据集（The Street View House Numbers Dataset）是开发机器学习和
 
 \subsection{OPTDIGITS手写数字库}
 OPTDIGITS数据库（Optical Recognition of Handwritten Digits Data Set）采集自43个人，其中的30人书写的数字作为训练集，剩下13人的数字作为测试集\cite{Bache+Lichman:2013}。每张图的大小为 32x32被划分为4x4的小块，每个 8x8的小块均代表一个数字，数字的范围为0-16。这样的低像素的数字图像能有效降低了参数维度，增加了模型对误差的鲁棒性。数据库已采用NIST的数据预处理工具做了规范化操作。
-\begin{figure}[h]
+\begin{figure}[H]
 \centering
 \includegraphics[scale=0.5]{./Pictures/optdigits-icon.eps}
 \caption{OPTDIGITS数据库样例\label{fig:svhn-icon}}
@@ -742,8 +739,7 @@ CIFAR-10 数据库包含 32x32像素的60000张彩色图像，一共分为10个�
 \end{figure}
 
 实验中对于五种数据集训练集需要划分出一部分作为交叉验证集，下表展示了总结数据。由于数据集测维度影响自动编码器输入层和隐藏层节点的数量，故同时给出自动编码器的配置数据。由于输出层节点数量始终等于输入层节点数量，故无需配置。
-\begin{table*}[h]
-%\renewcommand{\arraystretch}{1.0}
+\begin{table}[h]
 \begin{center}
 {
 \caption{数据集组成和稀疏自动编码器配置}\label{datasetconfig}}
@@ -763,7 +759,7 @@ NORB  & 23,300 & 1,000 & 23,300 & 6912 & 500 \\
 \hline
 \end{tabular}
 \end{center}
-\end{table*}
+\end{table}
 
 
 
@@ -771,37 +767,35 @@ NORB  & 23,300 & 1,000 & 23,300 & 6912 & 500 \\
 \subsection{特征可视化}
 在展示实验结果之前，我们先将自动编码器训练获得的特征绘制成图像，以便分析特征有效性，这里以MNIST数据集为例。下图展示了纯自动编码器和配置不同稀疏因子的自动编码器学习到的特征。
 
-
-
-\begin{figure}[h] 
+\begin{figure}[h]  
+\centering
+\caption{自动编码器配置不同惩罚因子学习到的特征\label{fig:no}}  
+\begin{minipage}[h]{0.8\linewidth}
 \centering
 \includegraphics[scale=0.5]{./figure/MNIST_No_penalty_weight.eps}
-\caption{纯自动编码器学习到的特征\label{fig:no}}
-\end{figure}
-
-\begin{figure}[h] 
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.8\linewidth}
 \centering
 \includegraphics[scale=0.5]{./figure/weight_L1.png}
-\caption{L1范数自动编码器学习到的特征\label{fig:l1}}
-\end{figure}
-
-\begin{figure}[h] 
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.8\linewidth}
 \centering
 \includegraphics[scale=0.5]{./figure/weight_L2.png}
-\caption{L2范数自动编码器学习到的特征\label{fig:l2}}
-\end{figure}
-
-\begin{figure}[h] 
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.8\linewidth}
 \centering
 \includegraphics[scale=0.5]{./figure/weight_KL.png}
-\caption{KL因子自动编码器学习到的特征\label{fig:kl}}
-\end{figure}
-
-\begin{figure}[h] 
+\end{minipage}
+\hfill
+\begin{minipage}[h]{0.8\linewidth}
 \centering
 \includegraphics[scale=0.5]{./figure/MNIST_student_weight.eps}
-\caption{Student-t因子自动编码器学习到的特征\label{fig:st}}
+\end{minipage}
 \end{figure}
+
 
 在图 \ref{fig:st}和\ref{fig:kl} 中，由KL因子和Student-t 因子自动编码器能训练获得一些浅层的局部特征。若将这些特征用于深层神经网络（DNN）能较好地完成工作。与此同时，L2范数因子自动编码器能训练获得一些全局的特征，能直接用于简单的浅层分类器，达到有效的精确率，如图\ref{fig:l2}所示。然而，L1 范数自动编码器生成的特征效果明显差于其它的惩罚因子，特征模糊不明显。最后，所有稀疏编码器获得的特征均比纯自动编码器的好，纯自动编码器的特征看上去杂乱无章，表明使用稀疏惩罚因子能有效提高特征的区分度。
 
@@ -809,39 +803,39 @@ NORB  & 23,300 & 1,000 & 23,300 & 6912 & 500 \\
 
 \section{实验数据分析}
 实验数据整理，如下图\label{fig:sparsitylevel} 所示，每行四张图对应一个数据集上的实验，按照行顺序为：MNIST、CIFAR-10、SVHL-10、OPTDIGITS、NORB数据集。对于一个数据集，我们采用四个不同的稀疏惩罚因子分别进行实验，按照从左到右的顺序为：L1范数、L2范数、KL因子、Student-t因子。其中左边栏表示特征的稀疏度，右边栏表示测试集上的正确率，X轴表示稀疏参数的取值范围。
-\begin{figure*}[h]	  
+\begin{figure}[h]	  
 \caption{不同稀疏惩罚因子的模型的稀疏度、正确率统计图表\label{fig:sparsitylevel}}
 \begin{minipage}[h]{0.23\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/MNIST_L1.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/MNIST_L2.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/MNIST_student.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/MNIST_KL.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/cifar_L1.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/cifar_L2.eps}
 \end{minipage}
 \hfill
-\begin{minipage}[h]{0.23\linewidth}
+\begin{minipage}[h]{0.24\linewidth}
 \centering
 \includegraphics[width=1\textwidth]{./figure/cifar_student.eps}
 \end{minipage}
@@ -910,7 +904,7 @@ NORB  & 23,300 & 1,000 & 23,300 & 6912 & 500 \\
 \centering
 \includegraphics[width=1\textwidth]{./figure/norb_KL.eps}
 \end{minipage}		
-\end{figure*}
+\end{figure}
 
 从上面的图表数据我们分析得知，稀疏表示能有效提高分类精度，但在某些情况下该结论并不成立。若是特征过于稀疏，那将会压制系统的准确率。对于L1范数惩罚因子，它的稀疏度快速收敛至1，从而特征向量将会过于稀疏，导致模型的精度急剧下降。即，L1范数对系统模型的约束越小，系统的性能表现越好。另外，KL差分因子的稀疏度在每个数据集上均能平稳收敛至0.5。它的准确率和稀疏度在测试数据集上的表现均远远优于其它惩罚因子，处在一个能广泛接受的范围内。
 

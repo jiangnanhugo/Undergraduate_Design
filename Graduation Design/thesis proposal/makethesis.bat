@@ -1,5 +1,4 @@
-@echo off
-tasklist|find /i "Acrobat.exe" && taskkill /f /im Acrobat.exe && del main.pdf
+
 
 latex --src-specials --synctex=-1 main 
 makeindex main.idx
