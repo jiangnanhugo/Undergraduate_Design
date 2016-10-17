@@ -1,10 +1,11 @@
-Machine-Learning
+Self-Taught-Learning
 ================
 
-machine learning class exercise teached by Prof.Andrew Ng,
-
-and my thesis.
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/jiangnanHugo/machine-learning/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+##my Bachelor thesis.
+ this is my thesis raw tex, and my matlab code implementing self-taught-learning
+ 
+ 1. feature learning with stacked autoencoder
+ 
+ 2. multi-class identification with softmax.
+ 
 
